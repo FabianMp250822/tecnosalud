@@ -8,6 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Logo } from '@/components/logo';
 import { LanguageSwitcher } from '@/components/language-switcher';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel"
 
 const scrollTo = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -24,6 +29,18 @@ const serviceIcons: { [key: string]: React.ElementType } = {
   maintenance: Wrench,
   support: Users,
 };
+
+const clientLogos = [
+  { name: 'Client 1', logo: 'https://placehold.co/160x80.png', hint: 'tech logo' },
+  { name: 'Client 2', logo: 'https://placehold.co/160x80.png', hint: 'company brand' },
+  { name: 'Client 3', logo: 'https://placehold.co/160x80.png', hint: 'tech logo' },
+  { name: 'Client 4', logo: 'https://placehold.co/160x80.png', hint: 'company brand' },
+  { name: 'Client 5', logo: 'https://placehold.co/160x80.png', hint: 'tech logo' },
+  { name: 'Client 6', logo: 'https://placehold.co/160x80.png', hint: 'company brand' },
+  { name: 'Client 7', logo: 'https://placehold.co/160x80.png', hint: 'tech logo' },
+  { name: 'Client 8', logo: 'https://placehold.co/160x80.png', hint: 'company brand' },
+];
+
 
 export function LandingPage() {
   const { t } = useLanguage();
@@ -102,6 +119,41 @@ export function LandingPage() {
                   </CardHeader>
                 </Card>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="clients" className="py-20 sm:py-24 bg-card/50">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <p className="text-primary font-semibold tracking-wider uppercase">{t.clients.subtitle}</p>
+              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2 max-w-2xl mx-auto">{t.clients.title}</h2>
+            </div>
+            <div className="mt-16">
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-4">
+                  {clientLogos.map((client, index) => (
+                    <CarouselItem key={index} className="basis-1/2 md:basis-1/4 lg:basis-1/6 pl-4">
+                      <div className="p-4 flex items-center justify-center">
+                        <Image
+                          src={client.logo}
+                          alt={client.name}
+                          width={140}
+                          height={70}
+                          data-ai-hint={client.hint}
+                          className="object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                        />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+              </Carousel>
             </div>
           </div>
         </section>

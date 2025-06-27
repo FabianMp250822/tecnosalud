@@ -57,6 +57,10 @@ export const dictionary: Dictionary = {
         }
       }
     },
+    clients: {
+      subtitle: 'Our Clients',
+      title: 'Trusted by the best companies in the industry',
+    },
     about: {
       title: 'About Us',
       subtitle: 'Our Commitment',
@@ -131,6 +135,10 @@ export const dictionary: Dictionary = {
           description: 'Asistencia técnica ágil y eficaz para resolver cualquier incidencia.'
         }
       }
+    },
+    clients: {
+      subtitle: 'Nuestros Clientes',
+      title: 'Con la confianza de las mejores empresas del sector',
     },
     about: {
       title: 'Quiénes Somos',
