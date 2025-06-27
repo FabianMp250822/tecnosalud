@@ -2,12 +2,20 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Allow public read access to articles
     match /articles/{articleId} {
-      allow read, write: if true;
+      allow read: if true;
+      allow write: if true; // Allow server-side generation
+    }
+    
+    // Allow server-side to write daily content references
+    match /dailyContent/{docId} {
+      allow read, write: if true; // Allow server-side generation
     }
 
-    match /dailyContent/{contentId} {
-      allow read, write: if true;
+    // Default deny all other access
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

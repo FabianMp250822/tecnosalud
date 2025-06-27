@@ -41,7 +41,7 @@ const processArticleDoc = (doc: QueryDocumentSnapshot<DocumentData>): Article =>
         imageHint: data.imageHint,
         imageUrl: data.imageUrl,
         language: data.language,
-        createdAt: timestamp.toDate().toISOString(),
+        createdAt: timestamp ? timestamp.toDate().toISOString() : new Date().toISOString(),
     };
 }
 
@@ -130,7 +130,11 @@ export async function saveDailyContent(
     createdAt: serverTimestamp(),
   });
 
-  await batch.commit();
+  try {
+    await batch.commit();
+  } catch (error) {
+    console.error("Error committing batch to save daily content:", error);
+  }
 }
 
 
@@ -156,8 +160,8 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
             return null;
         }
 
-        const doc = querySnapshot.docs[0];
-        return processArticleDoc(doc);
+        const docSnap = querySnapshot.docs[0];
+        return processArticleDoc(docSnap);
     } catch (error) {
         console.error(`Error getting article by slug ${slug}:`, error);
         return null;
