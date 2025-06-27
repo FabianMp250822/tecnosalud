@@ -5,9 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/use-language';
-import { ArrowRight, ChevronRight, Code, Cpu, Database, Server, ShieldCheck, Users, CloudCog, Wrench } from 'lucide-react';
+import { ArrowRight, ChevronRight, Code, Cpu, Database, Server, ShieldCheck, Users, CloudCog, Wrench, Mail, Phone, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Logo } from '@/components/logo';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import {
@@ -105,13 +108,13 @@ export function LandingPage() {
       <main className="flex-1">
         <section id="hero" className="relative py-24 sm:py-32 lg:py-40 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-background via-violet-950/20 to-background"></div>
-           {isLoading ? (
-            <Skeleton className="absolute inset-0 opacity-10 z-0"/>
+           {isLoading || !dynamicContent?.hero?.imageUrl ? (
+            <div className="absolute inset-0 bg-gradient-to-br from-background via-violet-950/20 to-background opacity-50 z-0"/>
           ) : (
             <Image 
-              src={dynamicContent?.hero?.imageUrl || "https://placehold.co/1920x1080.png"}
-              alt="Robotic hand touching a digital globe"
-              data-ai-hint="robotic hand digital globe"
+              src={dynamicContent.hero.imageUrl}
+              alt={dynamicContent.hero.title || 'Hero background'}
+              data-ai-hint={dynamicContent.hero.imageHint}
               fill
               className="absolute inset-0 opacity-10 z-0 object-cover"
               priority
@@ -266,13 +269,13 @@ export function LandingPage() {
                 <p className="mt-6 text-muted-foreground">{(t.about as any).content}</p>
               </div>
               <div className="relative">
-                 {isLoading ? (
+                 {isLoading || !dynamicContent?.about?.imageUrl ? (
                     <Skeleton className="w-full h-full min-h-[400px] rounded-lg shadow-2xl shadow-primary/10"/>
                  ) : (
                     <Image 
-                      src={dynamicContent?.about?.imageUrl || "https://placehold.co/600x400.png"}
+                      src={dynamicContent.about.imageUrl}
                       alt="Team working in a modern office"
-                      data-ai-hint="team modern office"
+                      data-ai-hint={dynamicContent.about.imageHint}
                       width={600}
                       height={400}
                       className="rounded-lg shadow-2xl shadow-primary/10 w-full h-auto"
@@ -284,15 +287,70 @@ export function LandingPage() {
         </section>
 
         <section id="contact" className="py-20 sm:py-24 bg-background">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">{(t.commitment as any).title}</h2>
-            <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-              {(t.commitment as any).description}
-            </p>
-            <div className="mt-8 flex justify-center">
-              <Button size="lg" asChild className="text-primary-foreground bg-gradient-to-r from-sky-400 to-violet-400 hover:brightness-110 transition-transform hover:scale-105">
-                <Link href="/signup">{(t.commitment as any).cta} <ChevronRight /></Link>
-              </Button>
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <p className="text-primary font-semibold tracking-wider uppercase">{(t.contact_form as any).subtitle}</p>
+              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2">{(t.contact_form as any).title}</h2>
+              <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">{(t.contact_form as any).description}</p>
+            </div>
+            <div className="mt-16 grid lg:grid-cols-2 gap-16 items-start">
+              <div className="space-y-8">
+                <div>
+                  <h3 className="font-headline text-2xl font-semibold">{(t.contact_form as any).info_title}</h3>
+                  <p className="mt-2 text-muted-foreground">{(t.contact_form as any).info_description}</p>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary/10 text-primary p-3 rounded-md w-max"><Mail className="h-6 w-6" /></div>
+                    <div>
+                      <h4 className="font-semibold">Email</h4>
+                      <p className="text-muted-foreground">contact@tecnosalud.com</p>
+                    </div>
+                  </div>
+                   <div className="flex items-start gap-4">
+                    <div className="bg-primary/10 text-primary p-3 rounded-md w-max"><Phone className="h-6 w-6" /></div>
+                    <div>
+                      <h4 className="font-semibold">{(t.contact_form as any).phone_label}</h4>
+                      <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary/10 text-primary p-3 rounded-md w-max"><MapPin className="h-6 w-6" /></div>
+                    <div>
+                      <h4 className="font-semibold">{(t.contact_form as any).address_label}</h4>
+                      <p className="text-muted-foreground">123 Tech Avenue, Innovation City</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>{(t.contact_form as any).form_title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="name">{(t.contact_form as any).name_label}</Label>
+                          <Input id="name" placeholder={(t.contact_form as any).name_placeholder} />
+                        </div>
+                         <div className="space-y-2">
+                          <Label htmlFor="email">{(t.contact_form as any).email_label}</Label>
+                          <Input id="email" type="email" placeholder={(t.contact_form as any).email_placeholder} />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="message">{(t.contact_form as any).message_label}</Label>
+                        <Textarea id="message" placeholder={(t.contact_form as any).message_placeholder} rows={5}/>
+                      </div>
+                      <Button type="submit" className="w-full text-primary-foreground bg-gradient-to-r from-sky-400 to-violet-400 hover:brightness-110 transition-transform hover:scale-105">
+                        {(t.contact_form as any).submit_button}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </section>

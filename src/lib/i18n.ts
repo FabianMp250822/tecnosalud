@@ -72,11 +72,22 @@ export const dictionary: Dictionary = {
       subtitle: 'Our Commitment',
       content: "At Tecnosalud, we are dedicated to transforming your technological challenges into growth opportunities. Our team of experts works hand in hand with you to design, develop, and implement solutions that not only meet your current needs but also anticipate future demands. We believe in the power of technology to create a more efficient and connected world."
     },
-    commitment: {
-      title: 'We Are Committed to Your Business',
-      description: 'Contact us to discover how our solutions can boost your growth. Our team is ready to help you.',
-      cta: 'Contact Us',
-      placeholder: 'Get a free consultation'
+    contact_form: {
+      subtitle: 'Get in Touch',
+      title: 'Contact Us',
+      description: 'Have a question or a project in mind? We\'d love to hear from you. Fill out the form below or use our contact details to get in touch.',
+      info_title: 'Contact Information',
+      info_description: 'Find us at our office or reach out to us via phone or email.',
+      phone_label: 'Phone',
+      address_label: 'Address',
+      form_title: 'Send us a Message',
+      name_label: 'Full Name',
+      name_placeholder: 'John Doe',
+      email_label: 'Email Address',
+      email_placeholder: 'you@example.com',
+      message_label: 'Your Message',
+      message_placeholder: 'Tell us about your project...',
+      submit_button: 'Send Message'
     },
     footer: {
       description: 'Leaders in technological innovation, committed to the success of your business.',
@@ -207,11 +218,22 @@ export const dictionary: Dictionary = {
       subtitle: 'Nuestro Compromiso',
       content: "En Tecnosalud, nos dedicamos a transformar tus desafíos tecnológicos en oportunidades de crecimiento. Nuestro equipo de expertos trabaja de la mano contigo para diseñar, desarrollar e implementar soluciones que no solo satisfacen tus necesidades actuales, sino que también se anticipan a las demandas del futuro. Creemos en el poder de la tecnología para crear un mundo más eficiente y conectado."
     },
-    commitment: {
-      title: 'Estamos Comprometidos con tu Negocio',
-      description: 'Contáctanos para descubrir cómo nuestras soluciones pueden impulsar tu crecimiento. Nuestro equipo está listo para ayudarte.',
-      cta: 'Contáctanos',
-      placeholder: 'Obtén una consulta gratuita'
+    contact_form: {
+      subtitle: 'Ponte en Contacto',
+      title: 'Contáctanos',
+      description: '¿Tienes una pregunta o un proyecto en mente? Nos encantaría saber de ti. Completa el formulario a continuación o utiliza nuestros datos de contacto para comunicarte.',
+      info_title: 'Información de Contacto',
+      info_description: 'Encuéntranos en nuestra oficina o contáctanos por teléfono o correo electrónico.',
+      phone_label: 'Teléfono',
+      address_label: 'Dirección',
+      form_title: 'Envíanos un Mensaje',
+      name_label: 'Nombre Completo',
+      name_placeholder: 'Juan Pérez',
+      email_label: 'Correo Electrónico',
+      email_placeholder: 'tu@ejemplo.com',
+      message_label: 'Tu Mensaje',
+      message_placeholder: 'Cuéntanos sobre tu proyecto...',
+      submit_button: 'Enviar Mensaje'
     },
     footer: {
       description: 'Líderes en innovación tecnológica, comprometidos con el éxito de tu negocio.',
