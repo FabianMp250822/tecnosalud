@@ -8,7 +8,8 @@ export const dictionary: Dictionary = {
       contact: 'Contact',
       login: 'Log In',
       signup: 'Sign Up',
-      back_to_home: 'Back to Home'
+      back_to_home: 'Back to Home',
+      blog: 'Blog'
     },
     hero: {
       subtitle: 'Tecnosalud International SAS',
@@ -142,7 +143,8 @@ export const dictionary: Dictionary = {
       contact: 'Contacto',
       login: 'Iniciar Sesión',
       signup: 'Registrarse',
-      back_to_home: 'Volver al Inicio'
+      back_to_home: 'Volver al Inicio',
+      blog: 'Blog'
     },
     hero: {
       subtitle: 'Tecnosalud Internacional SAS',

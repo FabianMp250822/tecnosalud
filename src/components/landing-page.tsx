@@ -20,13 +20,6 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { generateLandingContent, GenerateLandingContentOutput } from '@/ai/flows/generate-landing-content-flow';
 import type { Locale } from '@/lib/types';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-
 
 const scrollTo = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -60,8 +53,6 @@ export function LandingPage() {
   const { t, language } = useLanguage();
   const [dynamicContent, setDynamicContent] = useState<GenerateLandingContentOutput | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedNews, setSelectedNews] = useState<GenerateLandingContentOutput['news'][0] | null>(null);
-
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -94,7 +85,7 @@ export function LandingPage() {
             <Logo />
             <nav className="hidden md:flex md:items-center md:gap-8 text-sm font-medium">
               <button onClick={() => scrollTo('services')} className="text-foreground/80 hover:text-primary transition-colors">{(t.nav as any).services}</button>
-              <button onClick={() => scrollTo('ai-news')} className="text-foreground/80 hover:text-primary transition-colors">{(t.ai_news as any).subtitle}</button>
+              <Link href="/blog" className="text-foreground/80 hover:text-primary transition-colors">{(t.nav as any).blog}</Link>
               <button onClick={() => scrollTo('about')} className="text-foreground/80 hover:text-primary transition-colors">{(t.nav as any).about}</button>
               <button onClick={() => scrollTo('contact')} className="text-foreground/80 hover:text-primary transition-colors">{(t.nav as any).contact}</button>
             </nav>
@@ -201,24 +192,24 @@ export function LandingPage() {
                     dynamicContent.news.map((newsItem, index) => (
                       <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                         <div className="p-4 h-full">
-                          <Card 
-                            onClick={() => setSelectedNews(newsItem)}
-                            className="h-full flex flex-col overflow-hidden bg-card border-border/50 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
-                            <Image
-                              src={`https://placehold.co/600x400.png`}
-                              data-ai-hint={newsItem.imageHint}
-                              alt={newsItem.title}
-                              width={600}
-                              height={400}
-                              className="w-full h-48 object-cover"
-                            />
-                            <CardHeader>
-                              <CardTitle className="font-headline text-lg line-clamp-2">{newsItem.title}</CardTitle>
-                            </CardHeader>
-                            <CardContent className="flex-grow">
-                              <p className="text-sm text-muted-foreground line-clamp-4">{newsItem.summary}</p>
-                            </CardContent>
-                          </Card>
+                           <Link href={`/blog/${newsItem.slug}`} className="block h-full">
+                            <Card className="h-full flex flex-col overflow-hidden bg-card border-border/50 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+                              <Image
+                                src={`https://placehold.co/600x400.png`}
+                                data-ai-hint={newsItem.imageHint}
+                                alt={newsItem.title}
+                                width={600}
+                                height={400}
+                                className="w-full h-48 object-cover"
+                              />
+                              <CardHeader>
+                                <CardTitle className="font-headline text-lg line-clamp-2">{newsItem.title}</CardTitle>
+                              </CardHeader>
+                              <CardContent className="flex-grow">
+                                <p className="text-sm text-muted-foreground line-clamp-4">{newsItem.summary}</p>
+                              </CardContent>
+                            </Card>
+                          </Link>
                         </div>
                       </CarouselItem>
                     ))
@@ -322,8 +313,8 @@ export function LandingPage() {
               <h3 className="font-semibold text-foreground">{(t.footer as any).links}</h3>
               <ul className="mt-4 space-y-2 text-sm">
                   <li><a href="#about" onClick={(e) => { e.preventDefault(); scrollTo('about'); }} className="text-muted-foreground hover:text-primary transition-colors">{(t.nav as any).about}</a></li>
+                  <li><Link href="/blog" className="text-muted-foreground hover:text-primary transition-colors">{(t.nav as any).blog}</Link></li>
                   <li><a href="#contact" onClick={(e) => { e.preventDefault(); scrollTo('contact'); }} className="text-muted-foreground hover:text-primary transition-colors">{(t.nav as any).contact}</a></li>
-                   <li><a href="#ai-news" onClick={(e) => { e.preventDefault(); scrollTo('ai-news'); }} className="text-muted-foreground hover:text-primary transition-colors">{(t.ai_news as any).subtitle}</a></li>
                    <li><Link href="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">{(t.footer as any).privacy}</Link></li>
                   <li><Link href="/cookies-policy" className="text-muted-foreground hover:text-primary transition-colors">{(t.footer as any).cookies}</Link></li>
               </ul>
@@ -338,33 +329,6 @@ export function LandingPage() {
           </div>
         </div>
       </footer>
-      
-      <Dialog open={!!selectedNews} onOpenChange={(isOpen) => !isOpen && setSelectedNews(null)}>
-        <DialogContent className="sm:max-w-2xl bg-card border-border/50 p-0">
-          {selectedNews && (
-            <>
-              <Image
-                src={`https://placehold.co/800x450.png`}
-                data-ai-hint={selectedNews.imageHint}
-                alt={selectedNews.title}
-                width={800}
-                height={450}
-                className="w-full h-64 object-cover rounded-t-lg"
-              />
-              <div className="p-6">
-                <DialogHeader>
-                  <DialogTitle className="font-headline text-2xl mb-2 text-foreground">{selectedNews.title}</DialogTitle>
-                </DialogHeader>
-                <div className="max-h-[40vh] overflow-y-auto pr-4">
-                  <p className="text-base text-muted-foreground whitespace-pre-line">
-                    {selectedNews.details}
-                  </p>
-                </div>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
