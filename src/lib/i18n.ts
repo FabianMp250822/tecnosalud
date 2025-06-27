@@ -61,6 +61,10 @@ export const dictionary: Dictionary = {
       subtitle: 'Our Clients',
       title: 'Trusted by the best companies in the industry',
     },
+    ai_news: {
+      subtitle: 'AI News',
+      title: 'Latest Breakthroughs in Artificial Intelligence',
+    },
     about: {
       title: 'About Us',
       subtitle: 'Our Commitment',
@@ -139,6 +143,10 @@ export const dictionary: Dictionary = {
     clients: {
       subtitle: 'Nuestros Clientes',
       title: 'Con la confianza de las mejores empresas del sector',
+    },
+    ai_news: {
+      subtitle: 'Noticias de IA',
+      title: 'Últimos Avances en Inteligencia Artificial',
     },
     about: {
       title: 'Quiénes Somos',

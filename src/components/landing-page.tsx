@@ -2,17 +2,24 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/use-language';
 import { ArrowRight, ChevronRight, Code, Cpu, Database, Server, ShieldCheck, Users, CloudCog, Wrench } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Logo } from '@/components/logo';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel"
+import { Skeleton } from '@/components/ui/skeleton';
+import { generateLandingContent, GenerateLandingContentOutput } from '@/ai/flows/generate-landing-content-flow';
+import type { Locale } from '@/lib/types';
+
 
 const scrollTo = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -43,7 +50,25 @@ const clientLogos = [
 
 
 export function LandingPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [dynamicContent, setDynamicContent] = useState<GenerateLandingContentOutput | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      setIsLoading(true);
+      try {
+        const content = await generateLandingContent(language as Locale);
+        setDynamicContent(content);
+      } catch (error) {
+        console.error("Failed to fetch dynamic content:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchContent();
+  }, [language]);
+
 
   const services = Object.entries(t.services.items).map(([key, value]) => ({
     key,
@@ -60,6 +85,7 @@ export function LandingPage() {
             <Logo />
             <nav className="hidden md:flex md:items-center md:gap-8 text-sm font-medium">
               <button onClick={() => scrollTo('services')} className="text-foreground/80 hover:text-primary transition-colors">{t.nav.services}</button>
+              <button onClick={() => scrollTo('ai-news')} className="text-foreground/80 hover:text-primary transition-colors">{t.ai_news.subtitle}</button>
               <button onClick={() => scrollTo('about')} className="text-foreground/80 hover:text-primary transition-colors">{t.nav.about}</button>
               <button onClick={() => scrollTo('contact')} className="text-foreground/80 hover:text-primary transition-colors">{t.nav.contact}</button>
             </nav>
@@ -90,10 +116,17 @@ export function LandingPage() {
           <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p className="text-primary font-semibold tracking-wider uppercase">{t.hero.subtitle}</p>
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl lg:text-7xl mt-4 max-w-4xl mx-auto">
-              {t.hero.title}
+              {isLoading ? <Skeleton className="h-20 w-full max-w-4xl mx-auto" /> : dynamicContent?.hero.title || t.hero.title}
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-              {t.hero.description}
+              {isLoading ? (
+                <div className="space-y-2 max-w-2xl mx-auto">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-4/5" />
+                </div>
+              ) : (
+                dynamicContent?.hero.description || t.hero.description
+              )}
             </p>
             <div className="mt-10 flex justify-center gap-4">
               <Button size="lg" asChild className="text-primary-foreground bg-gradient-to-r from-sky-400 to-violet-400 hover:brightness-110 transition-transform hover:scale-105">
@@ -122,8 +155,72 @@ export function LandingPage() {
             </div>
           </div>
         </section>
+        
+        <section id="ai-news" className="py-20 sm:py-24 bg-card/50">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <p className="text-primary font-semibold tracking-wider uppercase">{t.ai_news.subtitle}</p>
+              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2">{t.ai_news.title}</h2>
+            </div>
+            <div className="mt-16">
+              <Carousel
+                opts={{ align: "start", loop: true }}
+                className="w-full max-w-6xl mx-auto"
+              >
+                <CarouselContent>
+                  {isLoading || !dynamicContent?.news ? (
+                    Array.from({ length: 3 }).map((_, index) => (
+                      <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                        <div className="p-4">
+                          <Card className="h-full flex flex-col bg-card/80">
+                            <CardHeader className="p-0">
+                              <Skeleton className="h-48 w-full rounded-t-lg" />
+                            </CardHeader>
+                            <CardContent className="flex-grow p-6 space-y-4">
+                              <Skeleton className="h-6 w-4/5" />
+                              <div className="space-y-2">
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-2/3" />
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CarouselItem>
+                    ))
+                  ) : (
+                    dynamicContent.news.map((newsItem, index) => (
+                      <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                        <div className="p-4 h-full">
+                          <Card className="h-full flex flex-col overflow-hidden bg-card border-border/50 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1">
+                            <Image
+                              src={`https://placehold.co/600x400.png`}
+                              data-ai-hint={newsItem.imageHint}
+                              alt={newsItem.title}
+                              width={600}
+                              height={400}
+                              className="w-full h-48 object-cover"
+                            />
+                            <CardHeader>
+                              <CardTitle className="font-headline text-lg line-clamp-2">{newsItem.title}</CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex-grow">
+                              <p className="text-sm text-muted-foreground line-clamp-4">{newsItem.summary}</p>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CarouselItem>
+                    ))
+                  )}
+                </CarouselContent>
+                <CarouselPrevious className="hidden sm:flex" />
+                <CarouselNext className="hidden sm:flex" />
+              </Carousel>
+            </div>
+          </div>
+        </section>
 
-        <section id="clients" className="py-20 sm:py-24 bg-card/50">
+        <section id="clients" className="py-20 sm:py-24 bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <p className="text-primary font-semibold tracking-wider uppercase">{t.clients.subtitle}</p>
@@ -215,6 +312,7 @@ export function LandingPage() {
               <ul className="mt-4 space-y-2 text-sm">
                   <li><a href="#about" onClick={(e) => { e.preventDefault(); scrollTo('about'); }} className="text-muted-foreground hover:text-primary transition-colors">{t.nav.about}</a></li>
                   <li><a href="#contact" onClick={(e) => { e.preventDefault(); scrollTo('contact'); }} className="text-muted-foreground hover:text-primary transition-colors">{t.nav.contact}</a></li>
+                   <li><a href="#ai-news" onClick={(e) => { e.preventDefault(); scrollTo('ai-news'); }} className="text-muted-foreground hover:text-primary transition-colors">{t.ai_news.subtitle}</a></li>
               </ul>
             </div>
              <div>
