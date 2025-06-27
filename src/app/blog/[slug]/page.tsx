@@ -46,14 +46,16 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
                     <h1 className="font-headline text-4xl font-bold tracking-tight text-foreground sm:text-5xl">{article.title}</h1>
                 </header>
                 
-                <Image
-                    src={article.imageUrl || `https://placehold.co/1200x600.png`}
-                    alt={article.title}
-                    width={1200}
-                    height={600}
-                    className="w-full h-auto rounded-lg shadow-lg mb-8"
-                    priority
-                />
+                {article.imageUrl && (
+                  <Image
+                      src={article.imageUrl}
+                      alt={article.title}
+                      width={1200}
+                      height={600}
+                      className="w-full h-auto rounded-lg shadow-lg mb-8"
+                      priority
+                  />
+                )}
 
                 <div className="prose dark:prose-invert prose-lg max-w-none mx-auto text-muted-foreground text-lg whitespace-pre-line">
                     {article.details}
@@ -73,6 +75,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title: 'Artículo no encontrado',
     };
   }
+  
+  const images = article.imageUrl ? [
+    {
+      url: article.imageUrl,
+      width: 1200,
+      height: 600,
+      alt: article.title,
+    },
+  ] : [];
 
   return {
     title: `${article.title} | Tecnosalud Blog`,
@@ -81,14 +92,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title: `${article.title} | Tecnosalud Blog`,
       description: article.summary,
       type: 'article',
-      images: [
-        {
-          url: article.imageUrl || `https://placehold.co/1200x600.png`,
-          width: 1200,
-          height: 600,
-          alt: article.title,
-        },
-      ],
+      images,
     },
   };
 }

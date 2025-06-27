@@ -25,7 +25,7 @@ const NewsItemSchema = z.object({
     summary: z.string().describe("A brief summary of the AI news story (2-3 sentences), suitable for a card view."),
     details: z.string().describe("A detailed blog post about the news story (4-6 paragraphs). Write in a journalistic but accessible style."),
     imageHint: z.string().describe("One or two keywords for a relevant stock photo (e.g., 'AI robot')."),
-    imageUrl: z.string().describe("The URL of a relevant, AI-generated image for the blog post, hosted on Firebase Storage."),
+    imageUrl: z.string().optional().describe("The URL of a relevant, AI-generated image for the blog post, hosted on Firebase Storage. This is optional."),
 });
 
 const GenerateLandingContentOutputSchema = z.object({
@@ -102,7 +102,7 @@ const generateLandingContentFlow = ai.defineFlow(
     const newsWithImages = await Promise.all(
         (textOutput.news || []).map(async (newsItem) => {
             if (!newsItem?.imageHint || !newsItem.slug) {
-                return { ...newsItem, imageUrl: 'https://placehold.co/600x400.png' }; // Fallback
+                return newsItem; // Proceed without image
             }
 
             try {
@@ -122,9 +122,9 @@ const generateLandingContentFlow = ai.defineFlow(
 
                 return { ...newsItem, imageUrl: downloadURL };
             } catch (error) {
-                console.error(`Failed to generate or upload image for slug "${newsItem.slug}":`, error);
-                // Return the item with a placeholder on failure
-                return { ...newsItem, imageUrl: 'https://placehold.co/600x400.png' };
+                console.error(`Failed to generate or upload image for slug "${newsItem.slug}". Proceeding without image. Error:`, error);
+                // On failure, return the item without an imageUrl
+                return newsItem;
             }
         })
     );

@@ -35,13 +35,15 @@ export default function BlogPage() {
   const BlogCard = ({ article }: { article: Article }) => (
     <Link href={`/blog/${article.slug}`} className="block">
       <Card className="h-full flex flex-col overflow-hidden bg-card border-border/50 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
-        <Image
-          src={article.imageUrl || `https://placehold.co/600x400.png`}
-          alt={article.title}
-          width={600}
-          height={400}
-          className="w-full h-48 object-cover"
-        />
+        {article.imageUrl && (
+            <Image
+              src={article.imageUrl}
+              alt={article.title}
+              width={600}
+              height={400}
+              className="w-full h-48 object-cover"
+            />
+        )}
         <CardHeader>
           <CardTitle className="font-headline text-xl line-clamp-2">{article.title}</CardTitle>
         </CardHeader>

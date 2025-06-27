@@ -194,13 +194,15 @@ export function LandingPage() {
                         <div className="p-4 h-full">
                            <Link href={`/blog/${newsItem.slug}`} className="block h-full">
                             <Card className="h-full flex flex-col overflow-hidden bg-card border-border/50 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
-                              <Image
-                                src={newsItem.imageUrl || `https://placehold.co/600x400.png`}
-                                alt={newsItem.title}
-                                width={600}
-                                height={400}
-                                className="w-full h-48 object-cover"
-                              />
+                              {newsItem.imageUrl && (
+                                <Image
+                                  src={newsItem.imageUrl}
+                                  alt={newsItem.title}
+                                  width={600}
+                                  height={400}
+                                  className="w-full h-48 object-cover"
+                                />
+                              )}
                               <CardHeader>
                                 <CardTitle className="font-headline text-lg line-clamp-2">{newsItem.title}</CardTitle>
                               </CardHeader>
