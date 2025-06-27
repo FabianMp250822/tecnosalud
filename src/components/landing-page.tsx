@@ -71,7 +71,7 @@ export function LandingPage() {
   }, [language]);
 
 
-  const services = Object.entries(t.services.items).map(([key, value]) => ({
+  const services = Object.entries((t.services as any).items).map(([key, value]: [string, any]) => ({
     key,
     ...value,
     Icon: serviceIcons[key] || Server,
@@ -85,18 +85,18 @@ export function LandingPage() {
           <div className="flex h-20 items-center justify-between">
             <Logo />
             <nav className="hidden md:flex md:items-center md:gap-8 text-sm font-medium">
-              <button onClick={() => scrollTo('services')} className="text-foreground/80 hover:text-primary transition-colors">{t.nav.services}</button>
-              <button onClick={() => scrollTo('ai-news')} className="text-foreground/80 hover:text-primary transition-colors">{t.ai_news.subtitle}</button>
-              <button onClick={() => scrollTo('about')} className="text-foreground/80 hover:text-primary transition-colors">{t.nav.about}</button>
-              <button onClick={() => scrollTo('contact')} className="text-foreground/80 hover:text-primary transition-colors">{t.nav.contact}</button>
+              <button onClick={() => scrollTo('services')} className="text-foreground/80 hover:text-primary transition-colors">{(t.nav as any).services}</button>
+              <button onClick={() => scrollTo('ai-news')} className="text-foreground/80 hover:text-primary transition-colors">{(t.ai_news as any).subtitle}</button>
+              <button onClick={() => scrollTo('about')} className="text-foreground/80 hover:text-primary transition-colors">{(t.nav as any).about}</button>
+              <button onClick={() => scrollTo('contact')} className="text-foreground/80 hover:text-primary transition-colors">{(t.nav as any).contact}</button>
             </nav>
             <div className="flex items-center gap-2">
               <LanguageSwitcher />
               <Button variant="ghost" asChild>
-                <Link href="/login">{t.nav.login}</Link>
+                <Link href="/login">{(t.nav as any).login}</Link>
               </Button>
               <Button asChild className="text-primary-foreground bg-gradient-to-r from-sky-400 to-violet-400 hover:brightness-110 transition-transform hover:scale-105">
-                <Link href="/signup">{t.nav.signup} <ArrowRight className="ml-2 h-4 w-4"/></Link>
+                <Link href="/signup">{(t.nav as any).signup} <ArrowRight className="ml-2 h-4 w-4"/></Link>
               </Button>
             </div>
           </div>
@@ -115,9 +115,9 @@ export function LandingPage() {
             className="absolute inset-0 opacity-10 z-0"
           />
           <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p className="text-primary font-semibold tracking-wider uppercase">{t.hero.subtitle}</p>
+            <p className="text-primary font-semibold tracking-wider uppercase">{(t.hero as any).subtitle}</p>
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl lg:text-7xl mt-4 max-w-4xl mx-auto">
-              {isLoading ? <Skeleton className="h-20 w-full max-w-4xl mx-auto" /> : dynamicContent?.hero.title || t.hero.title}
+              {isLoading ? <Skeleton className="h-20 w-full max-w-4xl mx-auto" /> : dynamicContent?.hero.title || (t.hero as any).title}
             </h1>
             <div className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
               {isLoading ? (
@@ -126,12 +126,12 @@ export function LandingPage() {
                   <Skeleton className="h-4 w-4/5" />
                 </div>
               ) : (
-                dynamicContent?.hero.description || t.hero.description
+                dynamicContent?.hero.description || (t.hero as any).description
               )}
             </div>
             <div className="mt-10 flex justify-center gap-4">
               <Button size="lg" asChild className="text-primary-foreground bg-gradient-to-r from-sky-400 to-violet-400 hover:brightness-110 transition-transform hover:scale-105">
-                <Link href="#services" onClick={(e) => { e.preventDefault(); scrollTo('services'); }}>{t.hero.cta} <ArrowRight className="ml-2"/></Link>
+                <Link href="#services" onClick={(e) => { e.preventDefault(); scrollTo('services'); }}>{(t.hero as any).cta} <ArrowRight className="ml-2"/></Link>
               </Button>
             </div>
           </div>
@@ -140,8 +140,8 @@ export function LandingPage() {
         <section id="services" className="py-20 sm:py-24 bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <p className="text-primary font-semibold tracking-wider uppercase">{t.services.subtitle}</p>
-              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2">{t.services.title}</h2>
+              <p className="text-primary font-semibold tracking-wider uppercase">{(t.services as any).subtitle}</p>
+              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2">{(t.services as any).title}</h2>
             </div>
             <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {services.map((service) => (
@@ -160,8 +160,8 @@ export function LandingPage() {
         <section id="ai-news" className="py-20 sm:py-24 bg-card/50">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <p className="text-primary font-semibold tracking-wider uppercase">{t.ai_news.subtitle}</p>
-              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2">{t.ai_news.title}</h2>
+              <p className="text-primary font-semibold tracking-wider uppercase">{(t.ai_news as any).subtitle}</p>
+              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2">{(t.ai_news as any).title}</h2>
             </div>
             <div className="mt-16">
               <Carousel
@@ -224,8 +224,8 @@ export function LandingPage() {
         <section id="clients" className="py-20 sm:py-24 bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <p className="text-primary font-semibold tracking-wider uppercase">{t.clients.subtitle}</p>
-              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2 max-w-2xl mx-auto">{t.clients.title}</h2>
+              <p className="text-primary font-semibold tracking-wider uppercase">{(t.clients as any).subtitle}</p>
+              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2 max-w-2xl mx-auto">{(t.clients as any).title}</h2>
             </div>
             <div className="mt-16">
               <Carousel
@@ -260,9 +260,9 @@ export function LandingPage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div>
-                <p className="text-primary font-semibold tracking-wider uppercase">{t.about.subtitle}</p>
-                <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2">{t.about.title}</h2>
-                <p className="mt-6 text-muted-foreground">{t.about.content}</p>
+                <p className="text-primary font-semibold tracking-wider uppercase">{(t.about as any).subtitle}</p>
+                <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2">{(t.about as any).title}</h2>
+                <p className="mt-6 text-muted-foreground">{(t.about as any).content}</p>
               </div>
               <div className="relative">
                  <Image 
@@ -280,13 +280,13 @@ export function LandingPage() {
 
         <section id="contact" className="py-20 sm:py-24 bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">{t.commitment.title}</h2>
+            <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">{(t.commitment as any).title}</h2>
             <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-              {t.commitment.description}
+              {(t.commitment as any).description}
             </p>
             <div className="mt-8 flex justify-center">
               <Button size="lg" asChild className="text-primary-foreground bg-gradient-to-r from-sky-400 to-violet-400 hover:brightness-110 transition-transform hover:scale-105">
-                <Link href="/signup">{t.commitment.cta} <ChevronRight /></Link>
+                <Link href="/signup">{(t.commitment as any).cta} <ChevronRight /></Link>
               </Button>
             </div>
           </div>
@@ -298,10 +298,10 @@ export function LandingPage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="col-span-1">
               <Logo />
-              <p className="mt-4 text-sm text-muted-foreground">{t.footer.description}</p>
+              <p className="mt-4 text-sm text-muted-foreground">{(t.footer as any).description}</p>
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">{t.footer.services}</h3>
+              <h3 className="font-semibold text-foreground">{(t.footer as any).services}</h3>
               <ul className="mt-4 space-y-2 text-sm">
                 {services.slice(0, 5).map(s => (
                   <li key={s.key}><a href="#services" onClick={(e) => { e.preventDefault(); scrollTo('services'); }} className="text-muted-foreground hover:text-primary transition-colors">{s.title}</a></li>
@@ -309,20 +309,22 @@ export function LandingPage() {
               </ul>
             </div>
              <div>
-              <h3 className="font-semibold text-foreground">{t.footer.links}</h3>
+              <h3 className="font-semibold text-foreground">{(t.footer as any).links}</h3>
               <ul className="mt-4 space-y-2 text-sm">
-                  <li><a href="#about" onClick={(e) => { e.preventDefault(); scrollTo('about'); }} className="text-muted-foreground hover:text-primary transition-colors">{t.nav.about}</a></li>
-                  <li><a href="#contact" onClick={(e) => { e.preventDefault(); scrollTo('contact'); }} className="text-muted-foreground hover:text-primary transition-colors">{t.nav.contact}</a></li>
-                   <li><a href="#ai-news" onClick={(e) => { e.preventDefault(); scrollTo('ai-news'); }} className="text-muted-foreground hover:text-primary transition-colors">{t.ai_news.subtitle}</a></li>
+                  <li><a href="#about" onClick={(e) => { e.preventDefault(); scrollTo('about'); }} className="text-muted-foreground hover:text-primary transition-colors">{(t.nav as any).about}</a></li>
+                  <li><a href="#contact" onClick={(e) => { e.preventDefault(); scrollTo('contact'); }} className="text-muted-foreground hover:text-primary transition-colors">{(t.nav as any).contact}</a></li>
+                   <li><a href="#ai-news" onClick={(e) => { e.preventDefault(); scrollTo('ai-news'); }} className="text-muted-foreground hover:text-primary transition-colors">{(t.ai_news as any).subtitle}</a></li>
+                   <li><Link href="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">{(t.footer as any).privacy}</Link></li>
+                  <li><Link href="/cookies-policy" className="text-muted-foreground hover:text-primary transition-colors">{(t.footer as any).cookies}</Link></li>
               </ul>
             </div>
              <div>
-              <h3 className="font-semibold text-foreground">{t.footer.contact}</h3>
+              <h3 className="font-semibold text-foreground">{(t.footer as any).contact}</h3>
                <p className="mt-4 text-sm text-muted-foreground">contact@tecnosalud.com</p>
             </div>
           </div>
           <div className="mt-8 border-t pt-8 flex flex-col md:flex-row justify-between items-center">
-             <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Tecnosalud. {t.footer.rights}</p>
+             <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Tecnosalud. {(t.footer as any).rights}</p>
           </div>
         </div>
       </footer>
