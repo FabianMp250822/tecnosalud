@@ -1,14 +1,17 @@
+
 rules_version = '2';
 
 service firebase.storage {
   match /b/{bucket}/o {
-    // Allow public read access to all files in the article-images directory
-    match /article-images/{allPaths=**} {
+    // Permite la lectura pública de todos los archivos para que las imágenes se puedan mostrar.
+    match /{allPaths=**} {
       allow read;
-      // Allow writes only from your server-side process. 
-      // For simplicity in this environment, we'll allow all writes to this path.
-      // In a production environment, you should secure this further, e.g., using Firebase App Check or authenticated server requests.
-      allow write;
+    }
+
+    // Permite la escritura de imágenes PNG solo en el directorio 'article-images'.
+    // Esto es necesario para que el flujo de IA del servidor pueda subir las imágenes generadas.
+    match /article-images/{imageId} {
+      allow write: if request.resource.contentType == 'image/png';
     }
   }
 }
