@@ -57,24 +57,30 @@ export async function generateLandingContent(language: Locale): Promise<Generate
   throw new Error("Failed to generate or retrieve landing page content.");
 }
 
+// Define a schema specifically for the text generation part, omitting the imageUrl.
+const TextNewsItemSchema = NewsItemSchema.omit({ imageUrl: true });
+const GenerateLandingContentTextOutputSchema = z.object({
+  hero: GenerateLandingContentOutputSchema.shape.hero,
+  news: z.array(TextNewsItemSchema).length(3),
+});
+
 const generateTextPrompt = ai.definePrompt({
   name: 'generateLandingContentTextPrompt',
   input: { schema: GenerateLandingContentInputSchema },
-  // Output schema is intentionally less strict here, as we'll add the imageUrl later.
-  output: { schema: GenerateLandingContentOutputSchema.deepPartial() },
+  output: { schema: GenerateLandingContentTextOutputSchema },
   prompt: `You are a marketing expert and content creator for 'Tecnosalud', a leading tech solutions company.
 Your task is to generate compelling landing page content and 3 blog posts about AI news in the specified language: {{{language}}}.
 
-The content should be professional, innovative, and engaging.
+The content must be professional, innovative, and engaging. Your output MUST be a valid JSON object that adheres to the provided schema.
 
 Instructions:
-1.  Create a powerful and inspiring hero title and description for the landing page. The tone should be modern and reflect the 'Aurora' brand style (dynamic, premium, innovative).
-2.  Provide a list of 3 recent, real, and significant news or breakthroughs in the world of Artificial Intelligence. For each news item:
-    - Write a catchy, SEO-friendly title.
-    - Create a URL-friendly slug from the title (e.g., 'new-ai-model-released').
-    - Write a short summary (2-3 sentences) for a preview card.
-    - Write a full, detailed blog post (4-6 paragraphs) explaining the news. It should be well-structured, informative, and engaging for a tech-savvy but broad audience.
-    - Provide a one or two-word hint for a relevant image.
+1.  Create a powerful and inspiring hero title and description for the landing page. The tone should be modern, dynamic, premium, and innovative.
+2.  Provide a list of 3 recent, real, and significant news or breakthroughs in the world of Artificial Intelligence. For each news item, you must provide:
+    - A catchy, SEO-friendly title.
+    - A URL-friendly slug from the title (e.g., 'new-ai-model-released').
+    - A short summary (2-3 sentences) for a preview card.
+    - A full, detailed blog post (4-6 paragraphs) explaining the news. It should be well-structured, informative, and engaging for a tech-savvy but broad audience.
+    - A one or two-word hint for a relevant image.
 `,
 });
 
