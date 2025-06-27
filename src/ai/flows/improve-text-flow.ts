@@ -10,12 +10,12 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'zod';
 
-export const ImproveTextInputSchema = z.object({
+const ImproveTextInputSchema = z.object({
   text: z.string().describe('The text to be improved.'),
 });
 export type ImproveTextInput = z.infer<typeof ImproveTextInputSchema>;
 
-export const ImproveTextOutputSchema = z.object({
+const ImproveTextOutputSchema = z.object({
   improvedText: z
     .string()
     .describe('The improved, more engaging, and professional version of the text.'),

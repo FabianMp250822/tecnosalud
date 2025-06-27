@@ -11,12 +11,12 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import type { Locale } from '@/lib/types';
 
-export const GenerateLandingContentInputSchema = z.object({
+const GenerateLandingContentInputSchema = z.object({
   language: z.enum(['en', 'es']).describe('The language for the generated content.'),
 });
 export type GenerateLandingContentInput = z.infer<typeof GenerateLandingContentInputSchema>;
 
-export const GenerateLandingContentOutputSchema = z.object({
+const GenerateLandingContentOutputSchema = z.object({
   hero: z.object({
     title: z.string().describe("A catchy, professional hero title for a tech solutions company named 'Tecnosalud'."),
     description: z.string().describe("A concise and compelling hero description for 'Tecnosalud'."),
