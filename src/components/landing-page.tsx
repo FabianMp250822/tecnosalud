@@ -42,14 +42,14 @@ const serviceIcons: { [key: string]: React.ElementType } = {
 };
 
 const clientLogos = [
-  { name: 'Client 1', logo: 'https://placehold.co/160x80.png', hint: 'tech logo' },
-  { name: 'Client 2', logo: 'https://placehold.co/160x80.png', hint: 'company brand' },
-  { name: 'Client 3', logo: 'https://placehold.co/160x80.png', hint: 'tech logo' },
-  { name: 'Client 4', logo: 'https://placehold.co/160x80.png', hint: 'company brand' },
-  { name: 'Client 5', logo: 'https://placehold.co/160x80.png', hint: 'tech logo' },
-  { name: 'Client 6', logo: 'https://placehold.co/160x80.png', hint: 'company brand' },
-  { name: 'Client 7', logo: 'https://placehold.co/160x80.png', hint: 'tech logo' },
-  { name: 'Client 8', logo: 'https://placehold.co/160x80.png', hint: 'company brand' },
+  { name: 'Clínica de la Costa', logo: 'https://www.clinicadelacosta.com/assets/images/footer-logo.png' },
+  { name: 'Centro de Investigación Clínica de la Costa', logo: 'https://www.invclicosta.com/assets/img/logo/logo.png' },
+  { name: 'ADI', logo: 'https://ceadi.edu.co/wp-content/uploads/2022/10/Recurso-1-8.png' },
+  { name: 'CIDEACC', logo: 'https://cideacc.org/static/media/LOGO-CIDEACC-BLANCO.9c097083112aab88a977.png' },
+  { name: 'IMA Reumatología', logo: 'https://imareumatologia.com/wp-content/uploads/2022/08/Recurso-14-2.png' },
+  { name: 'Emprender', logo: 'https://emprender.edu.co/wp-content/uploads/2024/02/logo-color.png' },
+  { name: 'Dajusticia', logo: 'https://i.ibb.co/PsLbb5v6/unnamed-2-removebg-preview.png' },
+  { name: 'Sociedad Colombiana de Urbanistas', logo: 'https://i.ibb.co/fG2wQFP1/image.png' },
 ];
 
 
@@ -256,7 +256,6 @@ export function LandingPage() {
                           alt={client.name}
                           width={140}
                           height={70}
-                          data-ai-hint={client.hint}
                           className="object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
                         />
                       </div>
@@ -416,3 +415,5 @@ export function LandingPage() {
     </div>
   );
 }
+
+    
