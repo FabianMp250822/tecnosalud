@@ -23,6 +23,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { generateLandingContent, GenerateLandingContentOutput } from '@/ai/flows/generate-landing-content-flow';
 import type { Locale } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 const scrollTo = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -116,25 +117,32 @@ export function LandingPage() {
               alt={dynamicContent.hero.title || 'Hero background'}
               data-ai-hint={dynamicContent.hero.imageHint}
               fill
-              className="absolute inset-0 opacity-10 z-0 object-cover"
+              className="absolute inset-0 z-0 object-cover transition-opacity duration-1000 opacity-0 animate-in fade-in"
+              style={{ animationDuration: '1s', animationFillMode: 'forwards' }}
+              onLoad={(e) => (e.currentTarget.style.opacity = '0.1')}
               priority
             />
           )}
           <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p className="text-primary font-semibold tracking-wider uppercase">{(t.hero as any).subtitle}</p>
-            <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl lg:text-7xl mt-4 max-w-4xl mx-auto">
-              {isLoading ? <Skeleton className="h-20 w-full max-w-4xl mx-auto" /> : dynamicContent?.hero.title || (t.hero as any).title}
-            </h1>
-            <div className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-              {isLoading ? (
-                <div className="space-y-2 max-w-2xl mx-auto">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-4/5" />
+            <div className={cn('transition-opacity duration-700', isLoading ? 'opacity-0' : 'opacity-100 animate-in fade-in-up')}>
+                <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl lg:text-7xl mt-4 max-w-4xl mx-auto">
+                {dynamicContent?.hero.title || (t.hero as any).title}
+                </h1>
+                <div className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+                {dynamicContent?.hero.description || (t.hero as any).description}
                 </div>
-              ) : (
-                dynamicContent?.hero.description || (t.hero as any).description
-              )}
             </div>
+             {isLoading && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-4 text-center">
+                    <p className="text-primary font-semibold tracking-wider uppercase">{(t.hero as any).subtitle}</p>
+                    <Skeleton className="h-16 sm:h-20 lg:h-24 w-full max-w-4xl mx-auto mt-4" />
+                    <div className="space-y-2 max-w-2xl mx-auto mt-6">
+                        <Skeleton className="h-5 w-full" />
+                        <Skeleton className="h-5 w-4/5" />
+                    </div>
+                </div>
+            )}
             <div className="mt-10 flex justify-center gap-4">
               <Button size="lg" asChild className="text-primary-foreground bg-gradient-to-r from-sky-400 to-violet-400 hover:brightness-110 transition-transform hover:scale-105">
                 <button onClick={() => scrollTo('services')}>{(t.hero as any).cta} <ArrowRight className="ml-2"/></button>
@@ -193,7 +201,7 @@ export function LandingPage() {
                   ) : (
                     dynamicContent.news.map((newsItem, index) => (
                       <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                        <div className="p-4 h-full">
+                        <div className="p-4 h-full animate-in fade-in duration-500" style={{animationDelay: `${index * 150}ms`, animationFillMode: 'both'}}>
                            <Link href={`/blog/${newsItem.slug}`} className="block h-full">
                             <Card className="h-full flex flex-col overflow-hidden bg-card border-border/50 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
                               {newsItem.imageUrl && (
@@ -264,11 +272,25 @@ export function LandingPage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div>
-                <p className="text-primary font-semibold tracking-wider uppercase">{(t.about as any).subtitle}</p>
-                <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2">{(t.about as any).title}</h2>
-                <p className="mt-6 text-muted-foreground">{(t.about as any).content}</p>
+                {isLoading ? (
+                  <div className="space-y-4">
+                    <Skeleton className="h-5 w-1/3" />
+                    <Skeleton className="h-10 w-4/5" />
+                    <div className="mt-6 space-y-2">
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-5/6" />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="animate-in fade-in duration-500">
+                    <p className="text-primary font-semibold tracking-wider uppercase">{(t.about as any).subtitle}</p>
+                    <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2">{(t.about as any).title}</h2>
+                    <p className="mt-6 text-muted-foreground">{(t.about as any).content}</p>
+                  </div>
+                )}
               </div>
-              <div className="relative">
+              <div className="relative animate-in fade-in duration-500 delay-200">
                  {isLoading || !dynamicContent?.about?.imageUrl ? (
                     <Skeleton className="w-full h-full min-h-[400px] rounded-lg shadow-2xl shadow-primary/10"/>
                  ) : (
@@ -318,7 +340,7 @@ export function LandingPage() {
                     <div className="bg-primary/10 text-primary p-3 rounded-md w-max"><MapPin className="h-6 w-6" /></div>
                     <div>
                       <h4 className="font-semibold">{(t.contact_form as any).address_label}</h4>
-                      <p className="text-muted-foreground">calle 80 bis # 14 -45</p>
+                      <p className="text-muted-foreground">{(t.contact_form as any).address_value}</p>
                     </div>
                   </div>
                 </div>
