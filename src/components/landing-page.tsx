@@ -311,14 +311,14 @@ export function LandingPage() {
                     <div className="bg-primary/10 text-primary p-3 rounded-md w-max"><Phone className="h-6 w-6" /></div>
                     <div>
                       <h4 className="font-semibold">{(t.contact_form as any).phone_label}</h4>
-                      <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                      <p className="text-muted-foreground">3058028169</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 text-primary p-3 rounded-md w-max"><MapPin className="h-6 w-6" /></div>
                     <div>
                       <h4 className="font-semibold">{(t.contact_form as any).address_label}</h4>
-                      <p className="text-muted-foreground">123 Tech Avenue, Innovation City</p>
+                      <p className="text-muted-foreground">calle 80 bis # 14 -45</p>
                     </div>
                   </div>
                 </div>
