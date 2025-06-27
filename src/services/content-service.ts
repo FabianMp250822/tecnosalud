@@ -13,6 +13,8 @@ import {
   limit,
   orderBy,
   Timestamp,
+  DocumentData,
+  QueryDocumentSnapshot,
 } from 'firebase/firestore';
 import type { GenerateLandingContentOutput } from '@/ai/flows/generate-landing-content-flow';
 import type { Locale } from '@/lib/types';
@@ -22,10 +24,27 @@ const DAILY_CONTENT_COLLECTION = 'dailyContent';
 
 export type Article = GenerateLandingContentOutput['news'][0] & {
   id: string;
-  createdAt: Timestamp;
+  createdAt: string; // Serialized for client components
   language: Locale;
-  imageUrl: string;
 };
+
+// Helper to convert Firestore doc to a serializable Article object
+const processArticleDoc = (doc: QueryDocumentSnapshot<DocumentData>): Article => {
+    const data = doc.data();
+    const timestamp = data.createdAt as Timestamp;
+    return {
+        id: doc.id,
+        title: data.title,
+        slug: data.slug,
+        summary: data.summary,
+        details: data.details,
+        imageHint: data.imageHint,
+        imageUrl: data.imageUrl,
+        language: data.language,
+        createdAt: timestamp.toDate().toISOString(),
+    };
+}
+
 
 async function getDailyContentDocument(date: string, language: Locale) {
   try {
@@ -52,15 +71,13 @@ async function getArticlesByIds(articleIds: string[]): Promise<Article[]> {
       const articlesRef = collection(db, ARTICLES_COLLECTION);
       const q = query(articlesRef, where('__name__', 'in', chunk));
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as Article[];
+      return querySnapshot.docs.map(processArticleDoc);
     });
 
     const chunkedArticles = await Promise.all(articlePromises);
     const articles = chunkedArticles.flat();
     
+    // Re-order based on original articleIds
     return articleIds.map(id => articles.find(article => article.id === id)).filter(Boolean) as Article[];
   } catch (error) {
     console.error("Error getting articles by IDs:", error);
@@ -70,15 +87,19 @@ async function getArticlesByIds(articleIds: string[]): Promise<Article[]> {
 
 export async function getTodaysContent(language: Locale): Promise<GenerateLandingContentOutput | null> {
   const today = new Date().toISOString().split('T')[0];
-  const dailyDoc = await getDailyContentDocument(today, language);
+  try {
+    const dailyDoc = await getDailyContentDocument(today, language);
 
-  if (dailyDoc && dailyDoc.articleIds.length > 0) {
-    const articles = await getArticlesByIds(dailyDoc.articleIds);
-    if (articles.length === 0) return null;
-    return {
-      hero: dailyDoc.hero,
-      news: articles,
-    };
+    if (dailyDoc && dailyDoc.articleIds.length > 0) {
+      const articles = await getArticlesByIds(dailyDoc.articleIds);
+      if (articles.length === 0) return null;
+      return {
+        hero: dailyDoc.hero,
+        news: articles,
+      };
+    }
+  } catch (error) {
+    console.error(`Error in getTodaysContent for ${language}:`, error);
   }
   return null;
 }
@@ -118,10 +139,7 @@ export async function getAllArticles(language: Locale): Promise<Article[]> {
         const articlesRef = collection(db, ARTICLES_COLLECTION);
         const q = query(articlesRef, where('language', '==', language), orderBy('createdAt', 'desc'));
         const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        })) as Article[];
+        return querySnapshot.docs.map(processArticleDoc);
     } catch (error) {
         console.error(`Error getting all articles for language ${language}:`, error);
         return [];
@@ -139,10 +157,7 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
         }
 
         const doc = querySnapshot.docs[0];
-        return {
-            id: doc.id,
-            ...doc.data()
-        } as Article;
+        return processArticleDoc(doc);
     } catch (error) {
         console.error(`Error getting article by slug ${slug}:`, error);
         return null;

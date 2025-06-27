@@ -19,8 +19,8 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
   const locale = article.language === 'es' ? es : enUS;
   const dateFormat = article.language === 'es' ? "d 'de' MMMM 'de' yyyy" : "MMMM d, yyyy";
 
-  const publicationDate = article.createdAt?.toDate 
-    ? format(article.createdAt.toDate(), dateFormat, { locale }) 
+  const publicationDate = article.createdAt
+    ? format(new Date(article.createdAt), dateFormat, { locale }) 
     : (article.language === 'es' ? 'Fecha no disponible' : 'Date not available');
 
   return (
