@@ -3,12 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '@/hooks/use-language';
-import { ArrowRight, CheckCircle2, ChevronRight, Code, Cpu, Database, Server, ShieldCheck, Users, CloudCog, GitMerge, Wrench } from 'lucide-react';
+import { ArrowRight, ChevronRight, Code, Cpu, Database, Server, ShieldCheck, Users, CloudCog, Wrench } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Logo } from '@/components/logo';
 import { LanguageSwitcher } from '@/components/language-switcher';
-import { cn } from '@/lib/utils';
 
 const scrollTo = (id: string) => {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -52,7 +51,7 @@ export function LandingPage() {
               <Button variant="ghost" asChild>
                 <Link href="/login">{t.nav.login}</Link>
               </Button>
-              <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Button asChild className="text-primary-foreground bg-gradient-to-r from-sky-400 to-violet-400 hover:brightness-110 transition-transform hover:scale-105">
                 <Link href="/signup">{t.nav.signup} <ArrowRight className="ml-2 h-4 w-4"/></Link>
               </Button>
             </div>
@@ -62,7 +61,7 @@ export function LandingPage() {
 
       <main className="flex-1">
         <section id="hero" className="relative py-24 sm:py-32 lg:py-40 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-background via-indigo-950/20 to-background"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-background via-violet-950/20 to-background"></div>
            <Image 
             src="https://placehold.co/1920x1080.png"
             alt="Robotic hand touching a digital globe"
@@ -76,18 +75,18 @@ export function LandingPage() {
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl lg:text-7xl mt-4 max-w-4xl mx-auto">
               {t.hero.title}
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/80">
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
               {t.hero.description}
             </p>
             <div className="mt-10 flex justify-center gap-4">
-              <Button size="lg" asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Button size="lg" asChild className="text-primary-foreground bg-gradient-to-r from-sky-400 to-violet-400 hover:brightness-110 transition-transform hover:scale-105">
                 <Link href="#services" onClick={(e) => { e.preventDefault(); scrollTo('services'); }}>{t.hero.cta} <ArrowRight className="ml-2"/></Link>
               </Button>
             </div>
           </div>
         </section>
 
-        <section id="services" className="py-20 sm:py-24 bg-card/50">
+        <section id="services" className="py-20 sm:py-24 bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <p className="text-primary font-semibold tracking-wider uppercase">{t.services.subtitle}</p>
@@ -99,7 +98,7 @@ export function LandingPage() {
                   <CardHeader>
                     <div className="bg-primary/10 text-primary p-3 rounded-md w-max mb-4"><service.Icon className="h-6 w-6" /></div>
                     <CardTitle className="font-headline text-lg">{service.title}</CardTitle>
-                    <CardDescription className="text-sm text-foreground/70">{service.description}</CardDescription>
+                    <CardDescription className="text-sm text-muted-foreground">{service.description}</CardDescription>
                   </CardHeader>
                 </Card>
               ))}
@@ -107,13 +106,13 @@ export function LandingPage() {
           </div>
         </section>
         
-        <section id="about" className="py-20 sm:py-24">
+        <section id="about" className="py-20 sm:py-24 bg-card/95">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div>
                 <p className="text-primary font-semibold tracking-wider uppercase">{t.about.subtitle}</p>
                 <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl mt-2">{t.about.title}</h2>
-                <p className="mt-6 text-foreground/80">{t.about.content}</p>
+                <p className="mt-6 text-muted-foreground">{t.about.content}</p>
               </div>
               <div className="relative">
                  <Image 
@@ -129,14 +128,14 @@ export function LandingPage() {
           </div>
         </section>
 
-        <section id="contact" className="py-20 sm:py-24 bg-card/50">
+        <section id="contact" className="py-20 sm:py-24 bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">{t.commitment.title}</h2>
-            <p className="mt-4 max-w-2xl mx-auto text-lg text-foreground/80">
+            <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
               {t.commitment.description}
             </p>
             <div className="mt-8 flex justify-center">
-              <Button size="lg" asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Button size="lg" asChild className="text-primary-foreground bg-gradient-to-r from-sky-400 to-violet-400 hover:brightness-110 transition-transform hover:scale-105">
                 <Link href="/signup">{t.commitment.cta} <ChevronRight /></Link>
               </Button>
             </div>
@@ -144,35 +143,35 @@ export function LandingPage() {
         </section>
       </main>
 
-      <footer className="bg-card/50 border-t">
+      <footer className="bg-card border-t">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="col-span-1">
               <Logo />
-              <p className="mt-4 text-sm text-foreground/70">{t.footer.description}</p>
+              <p className="mt-4 text-sm text-muted-foreground">{t.footer.description}</p>
             </div>
             <div>
               <h3 className="font-semibold text-foreground">{t.footer.services}</h3>
               <ul className="mt-4 space-y-2 text-sm">
                 {services.slice(0, 5).map(s => (
-                  <li key={s.key}><a href="#services" onClick={(e) => { e.preventDefault(); scrollTo('services'); }} className="text-foreground/70 hover:text-primary transition-colors">{s.title}</a></li>
+                  <li key={s.key}><a href="#services" onClick={(e) => { e.preventDefault(); scrollTo('services'); }} className="text-muted-foreground hover:text-primary transition-colors">{s.title}</a></li>
                 ))}
               </ul>
             </div>
              <div>
               <h3 className="font-semibold text-foreground">{t.footer.links}</h3>
               <ul className="mt-4 space-y-2 text-sm">
-                  <li><a href="#about" onClick={(e) => { e.preventDefault(); scrollTo('about'); }} className="text-foreground/70 hover:text-primary transition-colors">{t.nav.about}</a></li>
-                  <li><a href="#contact" onClick={(e) => { e.preventDefault(); scrollTo('contact'); }} className="text-foreground/70 hover:text-primary transition-colors">{t.nav.contact}</a></li>
+                  <li><a href="#about" onClick={(e) => { e.preventDefault(); scrollTo('about'); }} className="text-muted-foreground hover:text-primary transition-colors">{t.nav.about}</a></li>
+                  <li><a href="#contact" onClick={(e) => { e.preventDefault(); scrollTo('contact'); }} className="text-muted-foreground hover:text-primary transition-colors">{t.nav.contact}</a></li>
               </ul>
             </div>
              <div>
               <h3 className="font-semibold text-foreground">{t.footer.contact}</h3>
-               <p className="mt-4 text-sm text-foreground/70">contact@tecnosalud.com</p>
+               <p className="mt-4 text-sm text-muted-foreground">contact@tecnosalud.com</p>
             </div>
           </div>
           <div className="mt-8 border-t pt-8 flex flex-col md:flex-row justify-between items-center">
-             <p className="text-sm text-foreground/70">&copy; {new Date().getFullYear()} Tecnosalud. {t.footer.rights}</p>
+             <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Tecnosalud. {t.footer.rights}</p>
           </div>
         </div>
       </footer>
