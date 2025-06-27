@@ -2,20 +2,17 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow public read access to articles
+    // Allow public read access to articles and daily content
     match /articles/{articleId} {
-      allow read: if true;
-      allow write: if true; // Allow server-side generation
-    }
-    
-    // Allow server-side to write daily content references
-    match /dailyContent/{docId} {
-      allow read, write: if true; // Allow server-side generation
+      allow get, list: if true;
+      // Allow server-side processes to create and update articles
+      allow create, update: if true;
     }
 
-    // Default deny all other access
-    match /{document=**} {
-      allow read, write: if false;
+    match /dailyContent/{docId} {
+      allow get, list: if true;
+       // Allow server-side processes to create and update the daily cache
+      allow create, update: if true;
     }
   }
 }

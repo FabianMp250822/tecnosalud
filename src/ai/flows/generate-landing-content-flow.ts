@@ -25,7 +25,7 @@ const NewsItemSchema = z.object({
     summary: z.string().describe("A brief summary of the AI news story (2-3 sentences), suitable for a card view."),
     details: z.string().describe("A detailed blog post about the news story (4-6 paragraphs). Write in a journalistic but accessible style."),
     imageHint: z.string().describe("One or two keywords for a relevant stock photo (e.g., 'AI robot')."),
-    imageUrl: z.string().url().optional().describe("The URL of a relevant, AI-generated image for the blog post, hosted on Firebase Storage. This is optional."),
+    imageUrl: z.string().optional().describe("The URL of a relevant, AI-generated image for the blog post, hosted on Firebase Storage. This is optional."),
 });
 
 const GenerateLandingContentOutputSchema = z.object({
@@ -116,6 +116,7 @@ const generateLandingContentFlow = ai.defineFlow(
     const createImage = async (hint: string, name: string, promptText: string, folder: 'site-images' | 'article-images') => {
         if (!hint || !name) return undefined;
         try {
+            console.log(`Generating image for "${name}" with hint: "${hint}"`);
             const { media } = await ai.generate({
                 model: 'googleai/gemini-2.0-flash-preview-image-generation',
                 prompt: `${promptText}: ${hint}. Style: cinematic, futuristic, high-quality, photorealistic, blue and purple tones.`,
@@ -124,7 +125,9 @@ const generateLandingContentFlow = ai.defineFlow(
             if (!media.url) throw new Error('Image generation failed to return a data URL.');
             const imageRef = ref(storage, `${folder}/${name}-${Date.now()}.png`);
             await uploadString(imageRef, media.url, 'data_url');
-            return getDownloadURL(imageRef);
+            const downloadUrl = await getDownloadURL(imageRef);
+            console.log(`Successfully generated and uploaded image for "${name}". URL: ${downloadUrl}`);
+            return downloadUrl;
         } catch (error) {
             console.error(`Failed to generate or upload image for "${name}". Error:`, error);
             return undefined;
