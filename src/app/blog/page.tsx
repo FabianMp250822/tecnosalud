@@ -36,8 +36,7 @@ export default function BlogPage() {
     <Link href={`/blog/${article.slug}`} className="block">
       <Card className="h-full flex flex-col overflow-hidden bg-card border-border/50 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
         <Image
-          src={`https://placehold.co/600x400.png`}
-          data-ai-hint={article.imageHint}
+          src={article.imageUrl || `https://placehold.co/600x400.png`}
           alt={article.title}
           width={600}
           height={400}

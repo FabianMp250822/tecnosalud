@@ -47,12 +47,12 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
                 </header>
                 
                 <Image
-                    src={`https://placehold.co/1200x600.png`}
-                    data-ai-hint={article.imageHint}
+                    src={article.imageUrl || `https://placehold.co/1200x600.png`}
                     alt={article.title}
                     width={1200}
                     height={600}
                     className="w-full h-auto rounded-lg shadow-lg mb-8"
+                    priority
                 />
 
                 <div className="prose dark:prose-invert prose-lg max-w-none mx-auto text-muted-foreground text-lg whitespace-pre-line">
@@ -83,7 +83,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       type: 'article',
       images: [
         {
-          url: `https://placehold.co/1200x600.png`,
+          url: article.imageUrl || `https://placehold.co/1200x600.png`,
           width: 1200,
           height: 600,
           alt: article.title,

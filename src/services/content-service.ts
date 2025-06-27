@@ -24,6 +24,7 @@ export type Article = GenerateLandingContentOutput['news'][0] & {
   id: string;
   createdAt: Timestamp;
   language: Locale;
+  imageUrl: string;
 };
 
 async function getDailyContentDocument(date: string, language: Locale) {
@@ -73,6 +74,7 @@ export async function getTodaysContent(language: Locale): Promise<GenerateLandin
 
   if (dailyDoc && dailyDoc.articleIds.length > 0) {
     const articles = await getArticlesByIds(dailyDoc.articleIds);
+    if (articles.length === 0) return null;
     return {
       hero: dailyDoc.hero,
       news: articles,

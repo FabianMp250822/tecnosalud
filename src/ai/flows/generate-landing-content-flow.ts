@@ -11,6 +11,8 @@ import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 import type { Locale } from '@/lib/types';
 import { getTodaysContent, saveDailyContent } from '@/services/content-service';
+import { storage } from '@/lib/firebase';
+import { ref, uploadString, getDownloadURL } from 'firebase/storage';
 
 const GenerateLandingContentInputSchema = z.object({
   language: z.enum(['en', 'es']).describe('The language for the generated content.'),
@@ -23,6 +25,7 @@ const NewsItemSchema = z.object({
     summary: z.string().describe("A brief summary of the AI news story (2-3 sentences), suitable for a card view."),
     details: z.string().describe("A detailed blog post about the news story (4-6 paragraphs). Write in a journalistic but accessible style."),
     imageHint: z.string().describe("One or two keywords for a relevant stock photo (e.g., 'AI robot')."),
+    imageUrl: z.string().url().describe("The URL of a relevant, AI-generated image for the blog post, hosted on Firebase Storage."),
 });
 
 const GenerateLandingContentOutputSchema = z.object({
@@ -54,10 +57,11 @@ export async function generateLandingContent(language: Locale): Promise<Generate
   throw new Error("Failed to generate or retrieve landing page content.");
 }
 
-const prompt = ai.definePrompt({
-  name: 'generateLandingContentPrompt',
+const generateTextPrompt = ai.definePrompt({
+  name: 'generateLandingContentTextPrompt',
   input: { schema: GenerateLandingContentInputSchema },
-  output: { schema: GenerateLandingContentOutputSchema },
+  // Output schema is intentionally less strict here, as we'll add the imageUrl later.
+  output: { schema: GenerateLandingContentOutputSchema.deepPartial() },
   prompt: `You are a marketing expert and content creator for 'Tecnosalud', a leading tech solutions company.
 Your task is to generate compelling landing page content and 3 blog posts about AI news in the specified language: {{{language}}}.
 
@@ -81,7 +85,51 @@ const generateLandingContentFlow = ai.defineFlow(
     outputSchema: GenerateLandingContentOutputSchema,
   },
   async (input) => {
-    const { output } = await prompt(input);
-    return output!;
+    // 1. Generate all the text content first
+    const { output: textOutput } = await generateTextPrompt(input);
+
+    if (!textOutput || !textOutput.news) {
+        throw new Error("Failed to generate text content.");
+    }
+    
+    // 2. Generate an image for each news item in parallel
+    const newsWithImages = await Promise.all(
+        (textOutput.news || []).map(async (newsItem) => {
+            if (!newsItem?.imageHint || !newsItem.slug) {
+                return { ...newsItem, imageUrl: 'https://placehold.co/600x400.png' }; // Fallback
+            }
+
+            try {
+                // Generate image
+                const { media } = await ai.generate({
+                    model: 'googleai/gemini-2.0-flash-preview-image-generation',
+                    prompt: `A visually stunning, high-quality, photorealistic image for a tech blog post about: ${newsItem.imageHint}. Style: cinematic, futuristic, blue and purple tones.`,
+                    config: { responseModalities: ['TEXT', 'IMAGE'] },
+                });
+
+                if (!media.url) throw new Error('Image generation failed to return a data URL.');
+
+                // Upload to Firebase Storage
+                const imageRef = ref(storage, `article-images/${newsItem.slug}-${Date.now()}.png`);
+                await uploadString(imageRef, media.url, 'data_url');
+                const downloadURL = await getDownloadURL(imageRef);
+
+                return { ...newsItem, imageUrl: downloadURL };
+            } catch (error) {
+                console.error(`Failed to generate or upload image for slug "${newsItem.slug}":`, error);
+                // Return the item with a placeholder on failure
+                return { ...newsItem, imageUrl: 'https://placehold.co/600x400.png' };
+            }
+        })
+    );
+    
+    // 3. Assemble the final output, ensuring it matches the schema
+    const finalOutput = {
+        hero: textOutput.hero,
+        news: newsWithImages,
+    };
+    
+    // Validate with Zod before returning. This will throw if the structure is wrong.
+    return GenerateLandingContentOutputSchema.parse(finalOutput);
   }
 );

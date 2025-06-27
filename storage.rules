@@ -1,0 +1,14 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow public read access to all files in the article-images directory
+    match /article-images/{allPaths=**} {
+      allow read;
+      // Allow writes only from your server-side process. 
+      // For simplicity in this environment, we'll allow all writes to this path.
+      // In a production environment, you should secure this further, e.g., using Firebase App Check or authenticated server requests.
+      allow write;
+    }
+  }
+}

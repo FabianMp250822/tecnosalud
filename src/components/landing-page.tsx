@@ -109,7 +109,7 @@ export function LandingPage() {
             src="https://placehold.co/1920x1080.png"
             alt="Robotic hand touching a digital globe"
             data-ai-hint="robotic hand digital globe"
-            layout="fill"
+            fill
             objectFit="cover"
             className="absolute inset-0 opacity-10 z-0"
           />
@@ -130,7 +130,7 @@ export function LandingPage() {
             </div>
             <div className="mt-10 flex justify-center gap-4">
               <Button size="lg" asChild className="text-primary-foreground bg-gradient-to-r from-sky-400 to-violet-400 hover:brightness-110 transition-transform hover:scale-105">
-                <Link href="#services" onClick={(e) => { e.preventDefault(); scrollTo('services'); }}>{(t.hero as any).cta} <ArrowRight className="ml-2"/></Link>
+                <button onClick={() => scrollTo('services')}>{(t.hero as any).cta} <ArrowRight className="ml-2"/></button>
               </Button>
             </div>
           </div>
@@ -195,8 +195,7 @@ export function LandingPage() {
                            <Link href={`/blog/${newsItem.slug}`} className="block h-full">
                             <Card className="h-full flex flex-col overflow-hidden bg-card border-border/50 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
                               <Image
-                                src={`https://placehold.co/600x400.png`}
-                                data-ai-hint={newsItem.imageHint}
+                                src={newsItem.imageUrl || `https://placehold.co/600x400.png`}
                                 alt={newsItem.title}
                                 width={600}
                                 height={400}
