@@ -27,36 +27,44 @@ export type Article = GenerateLandingContentOutput['news'][0] & {
 };
 
 async function getDailyContentDocument(date: string, language: Locale) {
-  const docId = `${date}_${language}`;
-  const docRef = doc(db, DAILY_CONTENT_COLLECTION, docId);
-  const docSnap = await getDoc(docRef);
-  return docSnap.exists() ? (docSnap.data() as { hero: any; articleIds: string[] }) : null;
+  try {
+    const docId = `${date}_${language}`;
+    const docRef = doc(db, DAILY_CONTENT_COLLECTION, docId);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists() ? (docSnap.data() as { hero: any; articleIds: string[] }) : null;
+  } catch (error) {
+    console.error(`Error getting daily content document for ${date}_${language}:`, error);
+    return null;
+  }
 }
 
 async function getArticlesByIds(articleIds: string[]): Promise<Article[]> {
   if (!articleIds || articleIds.length === 0) return [];
 
-  // Firestore 'in' queries are limited to 30 items.
-  // We chunk the requests to handle more than 30 articles if needed in the future.
-  const chunks: string[][] = [];
-  for (let i = 0; i < articleIds.length; i += 30) {
-    chunks.push(articleIds.slice(i, i + 30));
+  try {
+    const chunks: string[][] = [];
+    for (let i = 0; i < articleIds.length; i += 30) {
+      chunks.push(articleIds.slice(i, i + 30));
+    }
+
+    const articlePromises = chunks.map(async (chunk) => {
+      const articlesRef = collection(db, ARTICLES_COLLECTION);
+      const q = query(articlesRef, where('__name__', 'in', chunk));
+      const querySnapshot = await getDocs(q);
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Article[];
+    });
+
+    const chunkedArticles = await Promise.all(articlePromises);
+    const articles = chunkedArticles.flat();
+    
+    return articleIds.map(id => articles.find(article => article.id === id)).filter(Boolean) as Article[];
+  } catch (error) {
+    console.error("Error getting articles by IDs:", error);
+    return [];
   }
-
-  const articlePromises = chunks.map(async (chunk) => {
-    const articlesRef = collection(db, ARTICLES_COLLECTION);
-    const q = query(articlesRef, where('__name__', 'in', chunk));
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Article[];
-  });
-
-  const chunkedArticles = await Promise.all(articlePromises);
-  const articles = chunkedArticles.flat();
-  
-  return articleIds.map(id => articles.find(article => article.id === id)).filter(Boolean) as Article[];
 }
 
 export async function getTodaysContent(language: Locale): Promise<GenerateLandingContentOutput | null> {
@@ -104,27 +112,37 @@ export async function saveDailyContent(
 
 
 export async function getAllArticles(language: Locale): Promise<Article[]> {
-    const articlesRef = collection(db, ARTICLES_COLLECTION);
-    const q = query(articlesRef, where('language', '==', language), orderBy('createdAt', 'desc'));
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-    })) as Article[];
+    try {
+        const articlesRef = collection(db, ARTICLES_COLLECTION);
+        const q = query(articlesRef, where('language', '==', language), orderBy('createdAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        })) as Article[];
+    } catch (error) {
+        console.error(`Error getting all articles for language ${language}:`, error);
+        return [];
+    }
 }
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
-    const articlesRef = collection(db, ARTICLES_COLLECTION);
-    const q = query(articlesRef, where('slug', '==', slug), limit(1));
-    const querySnapshot = await getDocs(q);
+    try {
+        const articlesRef = collection(db, ARTICLES_COLLECTION);
+        const q = query(articlesRef, where('slug', '==', slug), limit(1));
+        const querySnapshot = await getDocs(q);
 
-    if (querySnapshot.empty) {
+        if (querySnapshot.empty) {
+            return null;
+        }
+
+        const doc = querySnapshot.docs[0];
+        return {
+            id: doc.id,
+            ...doc.data()
+        } as Article;
+    } catch (error) {
+        console.error(`Error getting article by slug ${slug}:`, error);
         return null;
     }
-
-    const doc = querySnapshot.docs[0];
-    return {
-        id: doc.id,
-        ...doc.data()
-    } as Article;
 }
