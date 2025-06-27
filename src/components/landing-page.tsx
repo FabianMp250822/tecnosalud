@@ -250,13 +250,13 @@ export function LandingPage() {
                 <CarouselContent className="-ml-4">
                   {clientLogos.map((client, index) => (
                     <CarouselItem key={index} className="basis-1/2 md:basis-1/4 lg:basis-1/6 pl-4">
-                      <div className="p-4 flex items-center justify-center">
+                      <div className="flex h-32 items-center justify-center rounded-lg bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-lg">
                         <Image
                           src={client.logo}
                           alt={client.name}
                           width={140}
                           height={70}
-                          className="object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                          className="h-full w-full object-contain grayscale opacity-70 transition-all duration-300 hover:grayscale-0 hover:opacity-100"
                         />
                       </div>
                     </CarouselItem>
