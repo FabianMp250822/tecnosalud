@@ -1,14 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   LogOut,
   Menu,
   Sparkles,
 } from 'lucide-react';
-
+import { useAuth } from '@/contexts/auth-context';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -26,6 +26,8 @@ import {
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/logo';
+import { useEffect } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -39,6 +41,40 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, loading, logout } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
+
+  if (loading || !user) {
+    return (
+       <div className="flex flex-col min-h-screen">
+        <header className="flex h-16 items-center gap-4 border-b bg-card px-6">
+          <Skeleton className="h-8 w-8 lg:hidden" />
+          <div className="flex w-full items-center justify-end gap-4">
+            <Skeleton className="h-9 w-9 rounded-full" />
+          </div>
+        </header>
+        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 bg-background">
+          <Skeleton className="h-10 w-48" />
+          <Skeleton className="h-40 w-full" />
+          <div className="flex-1 rounded-lg border border-dashed shadow-sm p-4">
+             <Skeleton className="h-full w-full" />
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/');
+  }
 
   const NavLink = ({ item }: { item: typeof navItems[0] }) => (
     <Link
@@ -93,26 +129,24 @@ export default function DashboardLayout({
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                   <Avatar className="h-9 w-9">
-                    <AvatarImage src="https://placehold.co/40x40.png" alt="User avatar" data-ai-hint="person" />
-                    <AvatarFallback>U</AvatarFallback>
+                    <AvatarImage src={user.photoURL || `https://placehold.co/40x40.png`} alt="User avatar" data-ai-hint="person" />
+                    <AvatarFallback>{user.email?.[0].toUpperCase() || 'U'}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">Usuario Pro</p>
+                    <p className="text-sm font-medium leading-none">{user.displayName || 'Usuario'}</p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      usuario@tecnosalud.dev
+                      {user.email}
                     </p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Cerrar Sesión</span>
-                  </Link>
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Cerrar Sesión</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

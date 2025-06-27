@@ -3,6 +3,7 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/contexts/language-context';
+import { AuthProvider } from '@/contexts/auth-context';
 
 export const metadata: Metadata = {
   title: 'Tecnosalud - Soluciones Digitales a tu Alcance',
@@ -61,10 +62,12 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
       </head>
       <body className={cn('font-body antialiased min-h-screen flex flex-col')}>
-        <LanguageProvider>
-          {children}
-          <Toaster />
-        </LanguageProvider>
+        <AuthProvider>
+          <LanguageProvider>
+            {children}
+            <Toaster />
+          </LanguageProvider>
+        </AuthProvider>
       </body>
     </html>
   );
