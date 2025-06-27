@@ -20,6 +20,12 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { generateLandingContent, GenerateLandingContentOutput } from '@/ai/flows/generate-landing-content-flow';
 import type { Locale } from '@/lib/types';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
 
 const scrollTo = (id: string) => {
@@ -54,6 +60,8 @@ export function LandingPage() {
   const { t, language } = useLanguage();
   const [dynamicContent, setDynamicContent] = useState<GenerateLandingContentOutput | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedNews, setSelectedNews] = useState<GenerateLandingContentOutput['news'][0] | null>(null);
+
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -193,7 +201,9 @@ export function LandingPage() {
                     dynamicContent.news.map((newsItem, index) => (
                       <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                         <div className="p-4 h-full">
-                          <Card className="h-full flex flex-col overflow-hidden bg-card border-border/50 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1">
+                          <Card 
+                            onClick={() => setSelectedNews(newsItem)}
+                            className="h-full flex flex-col overflow-hidden bg-card border-border/50 hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
                             <Image
                               src={`https://placehold.co/600x400.png`}
                               data-ai-hint={newsItem.imageHint}
@@ -328,6 +338,33 @@ export function LandingPage() {
           </div>
         </div>
       </footer>
+      
+      <Dialog open={!!selectedNews} onOpenChange={(isOpen) => !isOpen && setSelectedNews(null)}>
+        <DialogContent className="sm:max-w-2xl bg-card border-border/50 p-0">
+          {selectedNews && (
+            <>
+              <Image
+                src={`https://placehold.co/800x450.png`}
+                data-ai-hint={selectedNews.imageHint}
+                alt={selectedNews.title}
+                width={800}
+                height={450}
+                className="w-full h-64 object-cover rounded-t-lg"
+              />
+              <div className="p-6">
+                <DialogHeader>
+                  <DialogTitle className="font-headline text-2xl mb-2 text-foreground">{selectedNews.title}</DialogTitle>
+                </DialogHeader>
+                <div className="max-h-[40vh] overflow-y-auto pr-4">
+                  <p className="text-base text-muted-foreground whitespace-pre-line">
+                    {selectedNews.details}
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

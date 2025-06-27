@@ -23,7 +23,8 @@ const GenerateLandingContentOutputSchema = z.object({
   }),
   news: z.array(z.object({
     title: z.string().describe("The headline of a recent AI news story."),
-    summary: z.string().describe("A brief summary of the AI news story."),
+    summary: z.string().describe("A brief summary of the AI news story, suitable for a card view."),
+    details: z.string().describe("A more detailed explanation of the news story (2-3 paragraphs), suitable for a modal view."),
     imageHint: z.string().describe("One or two keywords for a relevant stock photo (e.g., 'AI robot')."),
   })).length(5).describe('A list of 5 recent and important news items about Artificial Intelligence breakthroughs.'),
 });
@@ -44,7 +45,7 @@ The content should be professional, innovative, and engaging.
 
 Instructions:
 1.  Create a powerful and inspiring hero title and description. The tone should be modern and reflect the 'Aurora' brand style (dynamic, premium, innovative).
-2.  Provide a list of 5 recent, real, and significant news or breakthroughs in the world of Artificial Intelligence. For each news item, provide a title, a short summary, and a one or two-word hint for a relevant image.
+2.  Provide a list of 5 recent, real, and significant news or breakthroughs in the world of Artificial Intelligence. For each news item, provide a title, a short summary for a card view, a detailed explanation of about 2-3 paragraphs for a modal view, and a one or two-word hint for a relevant image.
 `,
 });
 
