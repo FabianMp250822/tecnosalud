@@ -105,14 +105,18 @@ export function LandingPage() {
       <main className="flex-1">
         <section id="hero" className="relative py-24 sm:py-32 lg:py-40 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-background via-violet-950/20 to-background"></div>
-           <Image 
-            src="https://placehold.co/1920x1080.png"
-            alt="Robotic hand touching a digital globe"
-            data-ai-hint="robotic hand digital globe"
-            fill
-            objectFit="cover"
-            className="absolute inset-0 opacity-10 z-0"
-          />
+           {isLoading ? (
+            <Skeleton className="absolute inset-0 opacity-10 z-0"/>
+          ) : (
+            <Image 
+              src={dynamicContent?.hero?.imageUrl || "https://placehold.co/1920x1080.png"}
+              alt="Robotic hand touching a digital globe"
+              data-ai-hint="robotic hand digital globe"
+              fill
+              className="absolute inset-0 opacity-10 z-0 object-cover"
+              priority
+            />
+          )}
           <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p className="text-primary font-semibold tracking-wider uppercase">{(t.hero as any).subtitle}</p>
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl lg:text-7xl mt-4 max-w-4xl mx-auto">
@@ -172,19 +176,14 @@ export function LandingPage() {
                     Array.from({ length: 3 }).map((_, index) => (
                       <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                         <div className="p-4">
-                          <Card className="h-full flex flex-col bg-card/80">
-                            <CardHeader className="p-0">
-                              <Skeleton className="h-48 w-full rounded-t-lg" />
-                            </CardHeader>
-                            <CardContent className="flex-grow p-6 space-y-4">
+                           <Card className="h-full flex flex-col bg-card/80 p-6 space-y-4">
                               <Skeleton className="h-6 w-4/5" />
                               <div className="space-y-2">
                                 <Skeleton className="h-4 w-full" />
                                 <Skeleton className="h-4 w-full" />
                                 <Skeleton className="h-4 w-2/3" />
                               </div>
-                            </CardContent>
-                          </Card>
+                            </Card>
                         </div>
                       </CarouselItem>
                     ))
@@ -267,14 +266,18 @@ export function LandingPage() {
                 <p className="mt-6 text-muted-foreground">{(t.about as any).content}</p>
               </div>
               <div className="relative">
-                 <Image 
-                    src="https://placehold.co/600x400.png"
-                    alt="Team working in a modern office"
-                    data-ai-hint="team modern office"
-                    width={600}
-                    height={400}
-                    className="rounded-lg shadow-2xl shadow-primary/10"
-                  />
+                 {isLoading ? (
+                    <Skeleton className="w-full h-full min-h-[400px] rounded-lg shadow-2xl shadow-primary/10"/>
+                 ) : (
+                    <Image 
+                      src={dynamicContent?.about?.imageUrl || "https://placehold.co/600x400.png"}
+                      alt="Team working in a modern office"
+                      data-ai-hint="team modern office"
+                      width={600}
+                      height={400}
+                      className="rounded-lg shadow-2xl shadow-primary/10 w-full h-auto"
+                    />
+                 )}
               </div>
             </div>
           </div>
