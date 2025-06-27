@@ -22,6 +22,13 @@ import type { Locale } from '@/lib/types';
 const ARTICLES_COLLECTION = 'articles';
 const DAILY_CONTENT_COLLECTION = 'dailyContent';
 
+// Define a more specific type for the daily content document from Firestore
+type DailyContentDoc = {
+    hero: GenerateLandingContentOutput['hero'];
+    about: GenerateLandingContentOutput['about'];
+    articleIds: string[];
+};
+
 export type Article = GenerateLandingContentOutput['news'][0] & {
   id: string;
   createdAt: string; // Serialized for client components
@@ -51,7 +58,7 @@ async function getDailyContentDocument(date: string, language: Locale) {
     const docId = `${date}_${language}`;
     const docRef = doc(db, DAILY_CONTENT_COLLECTION, docId);
     const docSnap = await getDoc(docRef);
-    return docSnap.exists() ? (docSnap.data() as { hero: any; articleIds: string[] }) : null;
+    return docSnap.exists() ? (docSnap.data() as DailyContentDoc) : null;
   } catch (error) {
     console.error(`Error getting daily content document for ${date}_${language}:`, error);
     return null;
@@ -92,9 +99,10 @@ export async function getTodaysContent(language: Locale): Promise<GenerateLandin
 
     if (dailyDoc && dailyDoc.articleIds.length > 0) {
       const articles = await getArticlesByIds(dailyDoc.articleIds);
-      if (articles.length === 0) return null;
+      // We don't need to return null if some articles are missing, just return the ones we found.
       return {
         hero: dailyDoc.hero,
+        about: dailyDoc.about,
         news: articles,
       };
     }
@@ -115,17 +123,39 @@ export async function saveDailyContent(
 
   content.news.forEach(newsItem => {
     const articleRef = doc(collection(db, ARTICLES_COLLECTION));
+    
+    // Create a mutable copy to avoid side effects
+    const articleData = { ...newsItem };
+
+    // Firestore throws an error if a field value is `undefined`.
+    // If imageUrl doesn't exist, we just don't include the field in the document.
+    if (articleData.imageUrl === undefined) {
+      delete (articleData as Partial<typeof articleData>).imageUrl;
+    }
+
     batch.set(articleRef, {
-      ...newsItem,
+      ...articleData,
       language,
       createdAt: serverTimestamp(),
     });
     articleIds.push(articleRef.id);
   });
 
+  // Similarly, clean the hero and about objects before saving.
+  const heroData = { ...content.hero };
+  if (heroData.imageUrl === undefined) {
+    delete (heroData as Partial<typeof heroData>).imageUrl;
+  }
+
+  const aboutData = { ...content.about };
+  if (aboutData.imageUrl === undefined) {
+    delete (aboutData as Partial<typeof aboutData>).imageUrl;
+  }
+
   const dailyDocRef = doc(db, DAILY_CONTENT_COLLECTION, `${today}_${language}`);
   batch.set(dailyDocRef, {
-    hero: content.hero,
+    hero: heroData,
+    about: aboutData,
     articleIds: articleIds,
     createdAt: serverTimestamp(),
   });
