@@ -25,7 +25,7 @@ const NewsItemSchema = z.object({
     summary: z.string().describe("A brief summary of the AI news story (2-3 sentences), suitable for a card view."),
     details: z.string().describe("A detailed blog post about the news story (4-6 paragraphs). Write in a journalistic but accessible style."),
     imageHint: z.string().describe("One or two keywords for a relevant stock photo (e.g., 'AI robot')."),
-    imageUrl: z.string().url().describe("The URL of a relevant, AI-generated image for the blog post, hosted on Firebase Storage."),
+    imageUrl: z.string().describe("The URL of a relevant, AI-generated image for the blog post, hosted on Firebase Storage."),
 });
 
 const GenerateLandingContentOutputSchema = z.object({
