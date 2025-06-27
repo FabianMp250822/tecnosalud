@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -118,7 +119,7 @@ export function LandingPage() {
             <h1 className="font-headline text-4xl font-bold tracking-tighter sm:text-6xl lg:text-7xl mt-4 max-w-4xl mx-auto">
               {isLoading ? <Skeleton className="h-20 w-full max-w-4xl mx-auto" /> : dynamicContent?.hero.title || t.hero.title}
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+            <div className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
               {isLoading ? (
                 <div className="space-y-2 max-w-2xl mx-auto">
                   <Skeleton className="h-4 w-full" />
@@ -127,7 +128,7 @@ export function LandingPage() {
               ) : (
                 dynamicContent?.hero.description || t.hero.description
               )}
-            </p>
+            </div>
             <div className="mt-10 flex justify-center gap-4">
               <Button size="lg" asChild className="text-primary-foreground bg-gradient-to-r from-sky-400 to-violet-400 hover:brightness-110 transition-transform hover:scale-105">
                 <Link href="#services" onClick={(e) => { e.preventDefault(); scrollTo('services'); }}>{t.hero.cta} <ArrowRight className="ml-2"/></Link>
