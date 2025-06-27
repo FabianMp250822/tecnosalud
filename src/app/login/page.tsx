@@ -20,22 +20,22 @@ export default function LoginPage() {
         </div>
         <Card>
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-headline">Welcome back</CardTitle>
+            <CardTitle className="text-2xl font-headline">Bienvenido de vuelta</CardTitle>
             <CardDescription>
-              Enter your credentials to access your account
+              Ingresa tus credenciales para acceder a tu cuenta
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" />
+              <Input id="email" type="email" placeholder="m@ejemplo.com" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Contraseña</Label>
               <Input id="password" type="password" />
             </div>
             <Button asChild className="w-full">
-              <Link href="/dashboard">Log in</Link>
+              <Link href="/dashboard">Iniciar Sesión</Link>
             </Button>
             <div className="relative my-2">
               <div className="absolute inset-0 flex items-center">
@@ -43,7 +43,7 @@ export default function LoginPage() {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-card px-2 text-muted-foreground">
-                  Or continue with
+                  O continuar con
                 </span>
               </div>
             </div>
@@ -58,9 +58,9 @@ export default function LoginPage() {
             </Button>
           </CardContent>
           <div className="text-center p-4 pt-0 text-sm">
-            Don&apos;t have an account?{' '}
+            ¿No tienes una cuenta?{' '}
             <Link href="/signup" className="underline text-primary">
-              Sign up
+              Regístrate
             </Link>
           </div>
         </Card>

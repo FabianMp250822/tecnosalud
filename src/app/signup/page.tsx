@@ -20,22 +20,22 @@ export default function SignupPage() {
         </div>
         <Card>
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-headline">Create an account</CardTitle>
+            <CardTitle className="text-2xl font-headline">Crear una cuenta</CardTitle>
             <CardDescription>
-              Enter your email below to create your account
+              Ingresa tu email para crear tu cuenta
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" />
+              <Input id="email" type="email" placeholder="m@ejemplo.com" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Contraseña</Label>
               <Input id="password" type="password" />
             </div>
             <Button asChild className="w-full">
-              <Link href="/dashboard">Create Account</Link>
+              <Link href="/dashboard">Crear Cuenta</Link>
             </Button>
             <div className="relative my-2">
               <div className="absolute inset-0 flex items-center">
@@ -43,7 +43,7 @@ export default function SignupPage() {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-card px-2 text-muted-foreground">
-                  Or continue with
+                  O continuar con
                 </span>
               </div>
             </div>
@@ -58,9 +58,9 @@ export default function SignupPage() {
             </Button>
           </CardContent>
           <div className="text-center p-4 pt-0 text-sm">
-            Already have an account?{' '}
+            ¿Ya tienes una cuenta?{' '}
             <Link href="/login" className="underline text-primary">
-              Log in
+              Inicia Sesión
             </Link>
           </div>
         </Card>

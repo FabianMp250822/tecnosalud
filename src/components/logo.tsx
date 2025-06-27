@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Bot } from 'lucide-react';
+import { Cpu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function Logo({ className }: { className?: string }) {
@@ -11,10 +11,10 @@ export function Logo({ className }: { className?: string }) {
         'font-headline',
         className
       )}
-      aria-label="IntelliSuite Home"
+      aria-label="Tecnosalud Home"
     >
-      <Bot className="h-6 w-6 text-primary" />
-      <span>IntelliSuite</span>
+      <Cpu className="h-6 w-6 text-primary" />
+      <span>Tecnosalud</span>
     </Link>
   );
 }

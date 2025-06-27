@@ -3,11 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  BrainCircuit,
   LayoutDashboard,
   LogOut,
   Menu,
-  Quote,
 } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -30,8 +28,6 @@ import { Logo } from '@/components/logo';
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/dashboard/tool-recommendation', icon: BrainCircuit, label: 'Tool Recommendation' },
-  { href: '/dashboard/content-summarization', icon: Quote, label: 'Content Summarizer' },
 ];
 
 
@@ -103,17 +99,17 @@ export default function DashboardLayout({
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">Pro User</p>
+                    <p className="text-sm font-medium leading-none">Usuario Pro</p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      user@intellisuite.dev
+                      usuario@tecnosalud.dev
                     </p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/login">
+                  <Link href="/">
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                    <span>Cerrar Sesión</span>
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>

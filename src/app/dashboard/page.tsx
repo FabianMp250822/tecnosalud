@@ -1,5 +1,3 @@
-import { BrainCircuit, Quote } from 'lucide-react';
-import { ToolCard } from '@/components/tool-card';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Dashboard() {
@@ -11,25 +9,20 @@ export default function Dashboard() {
 
        <Card>
         <CardHeader>
-          <CardTitle className="font-headline">Welcome, Pro User!</CardTitle>
-          <CardDescription>Your subscription is active. Explore your available tools below.</CardDescription>
+          <CardTitle className="font-headline">¡Bienvenido a Tecnosalud!</CardTitle>
+          <CardDescription>Tu panel de control está listo. Gestiona tus servicios y configuraciones desde aquí.</CardDescription>
         </CardHeader>
       </Card>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <ToolCard
-          title="Tool Recommendation Wizard"
-          description="Not sure where to start? Describe your task and let AI find the best tool for you."
-          href="/dashboard/tool-recommendation"
-          icon={<BrainCircuit className="h-8 w-8 text-primary" />}
-        />
-        <ToolCard
-          title="Content Summarizer"
-          description="Save time by generating concise summaries of long articles or documents."
-          href="/dashboard/content-summarization"
-          icon={<Quote className="h-8 w-8 text-primary" />}
-          isLocked={true}
-        />
+      
+      <div className="flex-1 flex items-center justify-center rounded-lg border border-dashed shadow-sm">
+        <div className="flex flex-col items-center gap-1 text-center">
+          <h3 className="text-2xl font-bold tracking-tight">
+            Aún no tienes servicios activos
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            Contacta a ventas para empezar a usar nuestras soluciones.
+          </p>
+        </div>
       </div>
     </>
   );
