@@ -171,9 +171,15 @@ export async function saveDailyContent(
 export async function getAllArticles(language: Locale): Promise<Article[]> {
     try {
         const articlesRef = collection(db, ARTICLES_COLLECTION);
-        const q = query(articlesRef, where('language', '==', language), orderBy('createdAt', 'desc'));
+        // Query by language only, to avoid needing a composite index.
+        const q = query(articlesRef, where('language', '==', language));
         const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map(processArticleDoc);
+        const articles = querySnapshot.docs.map(processArticleDoc);
+
+        // Sort in-memory by date (descending)
+        articles.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        
+        return articles;
     } catch (error) {
         console.error(`Error getting all articles for language ${language}:`, error);
         return [];
