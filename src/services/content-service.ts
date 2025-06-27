@@ -25,7 +25,6 @@ const DAILY_CONTENT_COLLECTION = 'dailyContent';
 // Define a more specific type for the daily content document from Firestore
 type DailyContentDoc = {
     hero: GenerateLandingContentOutput['hero'];
-    about: GenerateLandingContentOutput['about'];
     articleIds: string[];
 };
 
@@ -102,7 +101,6 @@ export async function getTodaysContent(language: Locale): Promise<GenerateLandin
       // We don't need to return null if some articles are missing, just return the ones we found.
       return {
         hero: dailyDoc.hero,
-        about: dailyDoc.about,
         news: articles,
       };
     }
@@ -141,21 +139,15 @@ export async function saveDailyContent(
     articleIds.push(articleRef.id);
   });
 
-  // Similarly, clean the hero and about objects before saving.
+  // Similarly, clean the hero object before saving.
   const heroData = { ...content.hero };
   if (heroData.imageUrl === undefined) {
     delete (heroData as Partial<typeof heroData>).imageUrl;
   }
 
-  const aboutData = { ...content.about };
-  if (aboutData.imageUrl === undefined) {
-    delete (aboutData as Partial<typeof aboutData>).imageUrl;
-  }
-
   const dailyDocRef = doc(db, DAILY_CONTENT_COLLECTION, `${today}_${language}`);
   batch.set(dailyDocRef, {
     hero: heroData,
-    about: aboutData,
     articleIds: articleIds,
     createdAt: serverTimestamp(),
   });

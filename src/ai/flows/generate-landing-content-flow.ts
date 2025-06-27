@@ -35,10 +35,6 @@ const GenerateLandingContentOutputSchema = z.object({
     imageHint: z.string().describe("One or two keywords for a relevant, abstract hero background image (e.g., 'digital network')."),
     imageUrl: z.string().url().optional(),
   }),
-  about: z.object({
-    imageHint: z.string().describe("One or two keywords for an image for the 'About Us' section, representing teamwork and technology (e.g., 'diverse team collaboration')."),
-    imageUrl: z.string().url().optional(),
-  }),
   news: z.array(NewsItemSchema).length(3).describe('A list of 3 recent and important news items about Artificial Intelligence breakthroughs, formatted as blog posts.'),
 });
 export type GenerateLandingContentOutput = z.infer<typeof GenerateLandingContentOutputSchema>;
@@ -71,9 +67,6 @@ const GenerateLandingContentTextOutputSchema = z.object({
     description: GenerateLandingContentOutputSchema.shape.hero.shape.description,
     imageHint: GenerateLandingContentOutputSchema.shape.hero.shape.imageHint,
   }),
-  about: z.object({
-    imageHint: GenerateLandingContentOutputSchema.shape.about.shape.imageHint,
-  }),
   news: z.array(TextNewsItemSchema).length(3),
 });
 
@@ -88,8 +81,7 @@ The content must be professional, innovative, and engaging. Your output MUST be 
 
 Instructions:
 1.  Create a powerful and inspiring hero title and description. Also provide a 1-2 word hint for a visually stunning, abstract background image (e.g., 'digital network').
-2.  Provide a 1-2 word hint for an image for the 'About Us' section that represents teamwork and technology (e.g., 'diverse team collaboration').
-3.  Provide a list of 3 recent, real, and significant news or breakthroughs in the world of Artificial Intelligence. For each news item, you must provide:
+2.  Provide a list of 3 recent, real, and significant news or breakthroughs in the world of Artificial Intelligence. For each news item, you must provide:
     - A catchy, SEO-friendly title.
     - A URL-friendly slug from the title (e.g., 'new-ai-model-released').
     - A short summary (2-3 sentences) for a preview card.
@@ -108,7 +100,7 @@ const generateLandingContentFlow = ai.defineFlow(
     // 1. Generate all the text content first
     const { output: textOutput } = await generateTextPrompt(input);
 
-    if (!textOutput || !textOutput.news || !textOutput.hero || !textOutput.about) {
+    if (!textOutput || !textOutput.news || !textOutput.hero) {
         throw new Error("Failed to generate text content.");
     }
 
@@ -137,13 +129,12 @@ const generateLandingContentFlow = ai.defineFlow(
     // 2. Generate all images in parallel
     const imagePromises = [
         createImage(textOutput.hero.imageHint, 'hero-background', 'A visually stunning, abstract hero background image for a tech company', 'site-images'),
-        createImage(textOutput.about.imageHint, 'about-us-image', 'An image for an "About Us" section of a tech company', 'site-images'),
         ...textOutput.news.map(newsItem => 
             createImage(newsItem.imageHint, newsItem.slug, 'A visually stunning image for a tech blog post about', 'article-images')
         )
     ];
 
-    const [heroImageUrl, aboutImageUrl, ...newsImagesUrls] = await Promise.all(imagePromises);
+    const [heroImageUrl, ...newsImagesUrls] = await Promise.all(imagePromises);
     
     const newsWithImages = textOutput.news.map((newsItem, index) => ({
         ...newsItem,
@@ -155,10 +146,6 @@ const generateLandingContentFlow = ai.defineFlow(
         hero: {
             ...textOutput.hero,
             imageUrl: heroImageUrl,
-        },
-        about: {
-            ...textOutput.about,
-            imageUrl: aboutImageUrl,
         },
         news: newsWithImages,
     };

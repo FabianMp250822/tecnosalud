@@ -289,19 +289,17 @@ export function LandingPage() {
                   </div>
                 )}
               </div>
-              <div className="relative animate-in fade-in duration-500 delay-200">
-                 {isLoading || !dynamicContent?.about?.imageUrl ? (
-                    <Skeleton className="w-full h-full min-h-[400px] rounded-lg shadow-2xl shadow-primary/10"/>
-                 ) : (
-                    <Image 
-                      src={dynamicContent.about.imageUrl}
-                      alt="Team working in a modern office"
-                      data-ai-hint={dynamicContent.about.imageHint}
-                      width={600}
-                      height={400}
-                      className="rounded-lg shadow-2xl shadow-primary/10 w-full h-auto"
-                    />
-                 )}
+              <div className="relative animate-in fade-in duration-500 delay-200 rounded-lg shadow-2xl shadow-primary/10 overflow-hidden">
+                <div className="relative h-0 pb-[56.25%]"> {/* 16:9 Aspect Ratio */}
+                    <iframe
+                        className="absolute top-0 left-0 w-full h-full"
+                        src="https://www.youtube.com/embed/K08xGpxIpdI"
+                        title="Video sobre Tecnosalud"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                    ></iframe>
+                </div>
               </div>
             </div>
           </div>
