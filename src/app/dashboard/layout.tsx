@@ -29,12 +29,6 @@ import { Logo } from '@/components/logo';
 import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/dashboard/tool-recommendation', icon: Sparkles, label: 'Mejora de Texto' },
-];
-
-
 export default function DashboardLayout({
   children,
 }: {
@@ -42,7 +36,16 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout, isAdmin } = useAuth();
+
+  const navItems = [
+    { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  ];
+
+  if (isAdmin) {
+    navItems.push({ href: '/dashboard/tool-recommendation', icon: Sparkles, label: 'Mejora de Texto' });
+  }
+
 
   useEffect(() => {
     if (!loading && !user) {

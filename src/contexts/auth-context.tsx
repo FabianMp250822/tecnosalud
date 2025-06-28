@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { onAuthStateChanged, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { onAuthStateChanged, User, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, updateProfile } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
 const ADMIN_UID = 'xLF36KqgmLOIfOxyGFVWTEJrOdV2';
@@ -14,6 +14,7 @@ interface AuthContextType {
   signup: (email: string, pass: string) => Promise<any>;
   logout: () => Promise<void>;
   loginWithGoogle: () => Promise<any>;
+  updateUserProfile?: (data: { displayName: string }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -55,6 +56,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return signInWithPopup(auth, provider);
   }
 
+  const updateUserProfile = async (data: { displayName: string }) => {
+    if (auth.currentUser) {
+      await updateProfile(auth.currentUser, data);
+      // Update the local state to reflect the change immediately
+      if (user) {
+        setUser({ ...user, displayName: data.displayName || null } as User);
+      }
+    } else {
+      throw new Error('No user is currently signed in.');
+    }
+  };
+
   const value = {
     user,
     isAdmin,
@@ -63,6 +76,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     signup,
     logout,
     loginWithGoogle,
+    updateUserProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
