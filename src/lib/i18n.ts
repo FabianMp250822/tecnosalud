@@ -97,7 +97,11 @@ export const dictionary: Dictionary = {
       contact: 'Contact Us',
       privacy: 'Privacy Policy',
       cookies: 'Cookies Policy',
-      rights: 'All rights reserved.'
+      rights: 'All rights reserved.',
+      company_name_label: 'Company Name',
+      company_name: 'Tecnosalud Internacional Sas',
+      nit_label: 'NIT',
+      nit: '901462321'
     },
     privacy_policy: {
       title: 'Privacy Policy',
@@ -244,7 +248,11 @@ export const dictionary: Dictionary = {
       contact: 'Contáctanos',
       privacy: 'Política de Privacidad',
       cookies: 'Política de Cookies',
-      rights: 'Todos los derechos reservados.'
+      rights: 'Todos los derechos reservados.',
+      company_name_label: 'Razón Social',
+      company_name: 'Tecnosalud Internacional Sas',
+      nit_label: 'NIT',
+      nit: '901462321'
     },
      privacy_policy: {
       title: 'Política de Privacidad',

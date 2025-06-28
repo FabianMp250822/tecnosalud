@@ -1,20 +1,22 @@
 import Link from 'next/link';
-import { Cpu } from 'lucide-react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 export function Logo({ className }: { className?: string }) {
   return (
     <Link
       href="/"
-      className={cn(
-        'flex items-center gap-2 text-xl font-bold text-foreground',
-        'font-headline',
-        className
-      )}
+      className={cn('flex items-center', className)}
       aria-label="Tecnosalud Home"
     >
-      <Cpu className="h-6 w-6 text-primary" />
-      <span>Tecnosalud</span>
+      <Image 
+        src="https://tecnosalud.cloud/assets/img/logo/logo-color.png" 
+        alt="Tecnosalud Logo" 
+        width={180} 
+        height={40}
+        className="object-contain h-10 w-auto"
+        priority
+      />
     </Link>
   );
 }

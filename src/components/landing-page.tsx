@@ -381,6 +381,10 @@ export function LandingPage() {
             <div className="col-span-1">
               <Logo />
               <p className="mt-4 text-sm text-muted-foreground">{(t.footer as any).description}</p>
+              <div className="mt-4 space-y-1 text-sm text-muted-foreground">
+                <p><span className="font-semibold text-foreground">{(t.footer as any).company_name_label}:</span> {(t.footer as any).company_name}</p>
+                <p><span className="font-semibold text-foreground">{(t.footer as any).nit_label}:</span> {(t.footer as any).nit}</p>
+              </div>
             </div>
             <div>
               <h3 className="font-semibold text-foreground">{(t.footer as any).services}</h3>
@@ -406,7 +410,7 @@ export function LandingPage() {
             </div>
           </div>
           <div className="mt-8 border-t pt-8 flex flex-col md:flex-row justify-between items-center">
-             <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Tecnosalud. {(t.footer as any).rights}</p>
+             <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} {(t.footer as any).company_name}. {(t.footer as any).rights}</p>
           </div>
         </div>
       </footer>
